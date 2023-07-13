@@ -19,10 +19,6 @@ logs/
 .pem
 .csv
 
-# Ignore Docker-related files
-docker-compose.yml
-Dockerfile
-
 # Ignore OS and editor-specific files
 .DS_Store
 Thumbs.db
