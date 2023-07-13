@@ -6,7 +6,7 @@ function Header({ openModal, openRecordingsModal }) {
   return (
     <>
       <Heading as="h1" sx={heading}>
-        AutoZoom2{" "}
+        AutoZoom{" "}
         <Box as="span" onClick={openModal} colorschema="teal" sx={span_box}>
           G
         </Box>
