@@ -7,9 +7,7 @@ services:
       - '6379:6379'
 
   prod:
-    build:
-      context: ./
-      target: dev
+    image: danieled1/autozoommanager-server:latest
     volumes:
       - .:/app
       - /app/node_modules
@@ -23,10 +21,7 @@ services:
     restart: always
 
   client:
-    build:
-      context: ../frontend/AutoZoomV2
-      dockerfile: Dockerfile
+    image: danieled1/autozoommanager-frontend:latest
     ports:
       - '8001:8000'
     user: '1000:1000' # Add this line to set the user and group permissions
-
