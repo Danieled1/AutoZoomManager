@@ -55,7 +55,7 @@ jobs:
           username: ec2-user
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd ~/AutoZoom
+            cd ~/AutoZoom/server-to-server-oauth-starter-api-main
             git pull
             docker-compose pull
             docker-compose up -d
