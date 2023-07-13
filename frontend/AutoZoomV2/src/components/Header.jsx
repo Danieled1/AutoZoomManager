@@ -5,16 +5,16 @@ function Header({ openModal, openRecordingsModal }) {
   const { heading, span_box, sub_header } = header_styles;
   return (
     <>
-      <Heading as='h1' sx={heading}>
-        AutoZoom{" "}
-        <Box as='span' onClick={openModal} colorschema='teal' sx={span_box}>
+      <Heading as="h1" sx={heading}>
+        AutoZoomV2{" "}
+        <Box as="span" onClick={openModal} colorschema="teal" sx={span_box}>
           G
         </Box>
         enerato
         <Box
-          as='span'
+          as="span"
           onClick={openRecordingsModal}
-          colorscheme='teal'
+          colorscheme="teal"
           sx={span_box}
         >
           r
