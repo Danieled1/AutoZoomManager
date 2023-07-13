@@ -131,18 +131,62 @@ const DownloadRecordingsModal = ({
   };
 
   // NEED TO FINISH DELETE ALL FEATURE
-  const deleteMeetingRecordings = async (meetingId, action, recordingIds) => {
+  const deleteMeetingRecordings = async (meetingId, action, recordingId) => {
+    try {
+      const response = await axios.delete(
+        `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
+        {
+          params: { action },
+        }
+      );
+      if (response.status === 200) {
+        setRecordings((prevRecordings) =>
+          prevRecordings.map((userRecordings) => {
+            if (
+              userRecordings.recordings.some(
+                (recording) => recording.recordingId === recordingId
+              )
+            ) {
+              return {
+                ...userRecordings,
+                recordings: userRecordings.recordings.filter(
+                  (recording) => recording.recordingId !== recordingId
+                ),
+              };
+            } else {
+              return userRecordings;
+            }
+          })
+        );
+        displaySuccessToast(
+          `Delete recording.`,
+          `Successfully deleted the recording`,
+          `info`
+        );
+      }
+    } catch (err) {
+      console.error("Error deleting recordings:", err);
+      displayErrorToast(
+        `Failed to Delete Recording`,
+        `An error occurred while deleting the recording.\n Error:${err}\n`
+      );
+    }
+  };
+
+  const deleteAllRecordings = async (action) => {
     try {
       let deletedRecordings = [];
-      for (let recordingId of recordingIds) {
-        const response = await axios.delete(
-          `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
-          {
-            params: { action, recordingId },
+      for (let userRecordings of recordings) {
+        for (let recording of userRecordings.recordings) {
+          const response = await axios.delete(
+            `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
+            {
+              params: { action, recordingId: recording.recordingId },
+            }
+          );
+          if (response.status === 200) {
+            deletedRecordings.push(recording.recordingId);
           }
-        );
-        if (response.status === 200) {
-          deletedRecordings.push(recordingId);
         }
       }
       setRecordings((prevRecordings) =>
@@ -153,7 +197,10 @@ const DownloadRecordingsModal = ({
           ),
         }))
       );
-      if (deletedRecordings.length === recordingIds.length) {
+      if (
+        deletedRecordings.length ===
+        recordings.flatMap((r) => r.recordings).length
+      ) {
         displaySuccessToast(
           `Delete recording.`,
           `Successfully deleted the recording`,
@@ -169,13 +216,6 @@ const DownloadRecordingsModal = ({
         `An error occurred while deleting the recording.\n Error:${err}\n`
       );
     }
-  };
-
-  const deleteAllRecordings = async () => {
-    const recordingIds = recordings.flatMap((recording) =>
-      recording.recordings.map((rec) => rec.recordingId)
-    );
-    await deleteMeetingRecordings("trash", recordingIds);
   };
   return (
     <Modal
@@ -206,7 +246,7 @@ const DownloadRecordingsModal = ({
                 </Button>
                 {downloadsInitiated && (
                   <Button
-                    // onClick={() => deleteAllRecordings()}
+                    onClick={() => deleteAllRecordings("trash")}
                     colorScheme="red"
                     disabled={recordings.length === 0}
                   >
