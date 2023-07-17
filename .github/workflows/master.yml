@@ -43,10 +43,11 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache-server
 
       - name: Image digest (frontend)
-        run: echo ${{ steps.docker_build_frontend.outputs.digest }}
-
+        run: echo "DOCKER_IMAGE_DIGEST_FRONTEND=${{ steps.docker_build_frontend.outputs.digest }}" >> $GITHUB_ENV
+  
       - name: Image digest (server)
-        run: echo ${{ steps.docker_build_server.outputs.digest }}
+        run: echo "DOCKER_IMAGE_DIGEST_SERVER=${{ steps.docker_build_server.outputs.digest }}" >> $GITHUB_ENV
+  
 
       - name: SSH and deploy to EC2
         uses: appleboy/ssh-action@master
