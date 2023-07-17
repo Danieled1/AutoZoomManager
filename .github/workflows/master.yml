@@ -13,6 +13,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache frontend dependencies
+        id: cache-frontend
+        uses: actions/cache@v2
+        with:
+          path: frontend/AutoZoomV2/node_modules # Path to the frontend dependencies
+          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/AutoZoomV2/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-frontend-
+
+      - name: Cache server dependencies
+        id: cache-server
+        uses: actions/cache@v2
+        with:
+          path: server-to-server-oauth-starter-api-main/node_modules # Path to the server dependencies
+          key: ${{ runner.os }}-server-${{ hashFiles('server-to-server-oauth-starter-api-main/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-server-
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
@@ -44,10 +62,9 @@ jobs:
 
       - name: Image digest (frontend)
         run: echo "DOCKER_IMAGE_DIGEST_FRONTEND=${{ steps.docker_build_frontend.outputs.digest }}" >> $GITHUB_ENV
-  
+
       - name: Image digest (server)
         run: echo "DOCKER_IMAGE_DIGEST_SERVER=${{ steps.docker_build_server.outputs.digest }}" >> $GITHUB_ENV
-  
 
       - name: SSH and deploy to EC2
         uses: appleboy/ssh-action@master
@@ -60,4 +77,3 @@ jobs:
             git pull
             docker-compose pull
             docker-compose up -d
-            
