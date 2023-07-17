@@ -285,53 +285,59 @@ const DownloadRecordingsModal = ({
                     <>
                       {recordings.map((result, index) =>
                         result.recordings.map((recording, recordingIndex) => (
-                          <Tr
-                            key={`${index}-${recordingIndex}`}
-                            className="row"
-                          >
-                            <Td>{result.user}</Td>
-                            <Td className="truncate">{recording.topic}</Td>
-                            <Td className="truncate">{recording.start_time}</Td>
-                            <Td>{formatBytes(recording.file_size)}</Td>
-                            <Td>
-                              <ButtonGroup>
-                                <Tooltip label="Download" placement="top">
-                                  <Button
-                                    onClick={() =>
-                                      downloadAllRecordings(recording)
-                                    }
-                                    colorScheme="teal"
-                                    size="sm"
-                                  >
-                                    <DownloadIcon />
-                                  </Button>
-                                </Tooltip>
-                                <Tooltip label="Delete" placement="top">
-                                  <Button
-                                    onClick={() =>
-                                      deleteMeetingRecordings(
-                                        recording.meetingId,
-                                        "trash",
-                                        recording.recordingId
-                                      )
-                                    }
-                                    colorScheme="red"
-                                    size="sm"
-                                  >
-                                    <DeleteIcon />
-                                  </Button>
-                                </Tooltip>
-                              </ButtonGroup>
-                            </Td>
-                          </Tr>
+                          <>
+                            <Tr
+                              key={`${index}-${recordingIndex}`}
+                              className="row"
+                            >
+                              <Td>{result.user}</Td>
+                              <Td className="truncate">{recording.topic}</Td>
+                              <Td className="truncate">
+                                {recording.start_time}
+                              </Td>
+                              <Td>{formatBytes(recording.file_size)}</Td>
+                              <Td>
+                                <ButtonGroup>
+                                  <Tooltip label="Download" placement="top">
+                                    <Button
+                                      onClick={() =>
+                                        downloadAllRecordings(recording)
+                                      }
+                                      colorScheme="teal"
+                                      size="sm"
+                                    >
+                                      <DownloadIcon />
+                                    </Button>
+                                  </Tooltip>
+                                  <Tooltip label="Delete" placement="top">
+                                    <Button
+                                      onClick={() =>
+                                        deleteMeetingRecordings(
+                                          recording.meetingId,
+                                          "trash",
+                                          recording.recordingId
+                                        )
+                                      }
+                                      colorScheme="red"
+                                      size="sm"
+                                    >
+                                      <DeleteIcon />
+                                    </Button>
+                                  </Tooltip>
+                                </ButtonGroup>
+                              </Td>
+                            </Tr>
+                          </>
                         ))
                       )}
                       <Tr>
-                        <Td></Td>
-                        <Td></Td>
-                        <Td></Td>
-                        <Td></Td>
-                        <Td></Td>
+                        <Td colSpan={5}>
+                          Total recordings:{" "}
+                          {recordings.reduce(
+                            (total, result) => total + result.recordings.length,
+                            0
+                          )}
+                        </Td>
                       </Tr>
                     </>
                   )}
