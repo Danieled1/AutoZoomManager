@@ -332,7 +332,7 @@ const DownloadRecordingsModal = ({
                       )}
                       <Tr>
                         <Td colSpan={5}>
-                          Total recordings:{" "}
+                          Total recordings {"  "}
                           {recordings.reduce(
                             (total, result) => total + result.recordings.length,
                             0
