@@ -2,6 +2,9 @@
 # https://hub.docker.com/_/node
 FROM node:14-alpine
 
+# Update npm to the latest version
+RUN npm install -g npm@latest
+
 # Create and change to the app directory.
 RUN mkdir -p /home/node/app && chown -R node:node /home/node/app
 WORKDIR /home/node/app
