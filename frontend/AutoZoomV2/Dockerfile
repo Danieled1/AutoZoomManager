@@ -13,7 +13,6 @@ USER node
 COPY --chown=node:node package*.json ./
 
 # Install production dependencies.
-# If you add a package-lock.json, speed your build by switching to 'npm ci'.
 RUN npm install 
 
 # Copy local code to the container image.
@@ -27,4 +26,3 @@ EXPOSE 8000
 
 # Run the web service on container startup.
 CMD ["npm", "run", "dev"]
-

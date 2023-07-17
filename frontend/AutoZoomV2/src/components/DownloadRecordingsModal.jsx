@@ -225,7 +225,7 @@ const DownloadRecordingsModal = ({
     >
       <ModalOverlay />
       <ModalContent sx={modal_content}>
-        <ModalHeader sx={modal_header}>Download Recordings</ModalHeader>
+        <ModalHeader sx={modal_header}>Recordings Manager</ModalHeader>
         <ModalCloseButton sx={secondary_color} />
         <ModalBody sx={modal_body}>
           <Input
