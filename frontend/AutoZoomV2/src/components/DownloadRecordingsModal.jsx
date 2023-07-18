@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Button,
   Modal,
@@ -124,7 +124,6 @@ const DownloadRecordingsModal = ({
       );
     }
   };
-  // NEED TO FINISH DELETE ALL FEATURE
   const deleteMeetingRecordings = async (meetingId, action, recordingId) => {
     try {
       const response = await axios.delete(
@@ -210,14 +209,11 @@ const DownloadRecordingsModal = ({
       );
     }
   };
-  const handleDateChange = (event) => setDate(event.target.value);
 
+  const handleDateChange = (event) => setDate(event.target.value);
   const handleDownloadAll = () => downloadAllRecordings();
   const handleDeleteAll = () => deleteAllRecordings("trash");
-  const handleDownload = (recording) => {
-    console.log(recording);
-    downloadAllRecordings(recording);
-  };
+  const handleDownload = (recording) => downloadAllRecordings(recording);
   const handleDelete = (recording) =>
     deleteMeetingRecordings(
       recording.meetingId,
@@ -225,10 +221,8 @@ const DownloadRecordingsModal = ({
       recording.recordingId
     );
 
-  const headers = ["User", "Topic", "Date", "File Size", "Actions"]; // Add or remove headers as per the data
-  // ======= ERRORR ON BUTTON GROUPS OF DOWNLOAD AND DELETE !!!! =========
+  const headers = ["User", "Topic", "Date", "File Size", "Actions"];
 
-  // ================================================================================================
   const renderRow = (result, index) =>
     result.recordings.map((recording, recordingIndex) => (
       <Tr key={`${index}-${recordingIndex}`} className="row">
