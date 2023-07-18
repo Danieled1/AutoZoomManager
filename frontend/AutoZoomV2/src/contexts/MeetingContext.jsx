@@ -3,8 +3,8 @@ import axios from "axios";
 import moment from "moment";
 import { createContext, useCallback, useContext, useState } from "react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
-import productionConfig from "../config.production";
-import developmentConfig from "../config.development";
+import productionConfig from "../config/config.production";
+import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
 const localDev = "production";

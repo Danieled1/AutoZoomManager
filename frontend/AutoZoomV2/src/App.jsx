@@ -8,9 +8,6 @@ import {
 } from "./components";
 import { useMeetingContext } from "./contexts/MeetingContext";
 import { app_styles } from "./styles/Styles";
-import developmentConfig from "./config.development";
-import productionConfig from "./config.production";
-
 const App = () => {
   const {
     meetingDetails,

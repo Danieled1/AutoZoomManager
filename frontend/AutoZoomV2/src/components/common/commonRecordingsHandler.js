@@ -21,11 +21,10 @@ const CommonRecordingsHandler = {
 
         const userRecordings = data.meetings.flatMap((meeting) => {
           const start_time = new Date(meeting.start_time);
-          // If start_time is not a valid date, skip this iteration
           if (!isValid(start_time)) return [];
 
           return meeting.recording_files.flatMap((recording, index) => {
-            // Skip this iteration if file_type is "CHAT"
+
             if (recording.file_type === "CHAT") return [];
 
             return {
@@ -138,6 +137,9 @@ const CommonRecordingsHandler = {
   async deleteAllRecordings(apiBaseUrl, recordings, setRecordings, displaySuccessToast, displayErrorToast, action) {
     try {
       let deletedRecordings = [];
+      
+      console.time("Original Version");
+      
       for (let userRecordings of recordings) {
         for (let recording of userRecordings.recordings) {
           const response = await axios.delete(
@@ -151,6 +153,7 @@ const CommonRecordingsHandler = {
           }
         }
       }
+      
       setRecordings((prevRecordings) =>
         prevRecordings.map((userRecordings) => ({
           ...userRecordings,
@@ -159,6 +162,7 @@ const CommonRecordingsHandler = {
           ),
         }))
       );
+      
       if (
         deletedRecordings.length ===
         recordings.flatMap((r) => r.recordings).length
@@ -171,6 +175,8 @@ const CommonRecordingsHandler = {
       } else {
         throw new Error("Not all recordings were deleted successfully");
       }
+      
+      console.timeEnd("Original Version");
     } catch (err) {
       console.error("Error deleting recordings:", err);
       displayErrorToast(
@@ -178,7 +184,9 @@ const CommonRecordingsHandler = {
         `An error occurred while deleting the recording.\n Error:${err}\n`
       );
     }
-  },
+  }
+  
+
 };
 
 export default CommonRecordingsHandler;
