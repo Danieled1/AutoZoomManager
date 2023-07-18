@@ -9,17 +9,9 @@ import {
   ModalCloseButton,
   ModalFooter,
   Input,
-  Table,
-  Thead,
-  Th,
-  Tbody,
   Tr,
   Td,
-  ButtonGroup,
-  Tooltip,
-  Spinner,
 } from "@chakra-ui/react";
-import { DeleteIcon, DownloadIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { format, isValid } from "date-fns";
 import { modal_styles } from "../styles/Styles";
@@ -33,6 +25,7 @@ const DownloadRecordingsModal = ({
   displaySuccessToast,
   displayErrorToast,
   formatBytes,
+  apiBaseUrl,
 }) => {
   const [date, setDate] = useState("");
   const [recordings, setRecordings] = useState([]);
@@ -44,10 +37,11 @@ const DownloadRecordingsModal = ({
 
   const fetchRecordings = async () => {
     try {
+      console.log("Current base url:", `${apiBaseUrl}`);
       setIsLoading(true);
       const promises = Object.values(usersMap).map(async (user) => {
         const response = await axios.get(
-          `http://3.80.182.53:8080/api/users/${user.id}/recordings`,
+          `${apiBaseUrl}/api/users/${user.id}/recordings`,
           {
             params: {
               from: date,
@@ -134,7 +128,7 @@ const DownloadRecordingsModal = ({
   const deleteMeetingRecordings = async (meetingId, action, recordingId) => {
     try {
       const response = await axios.delete(
-        `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
+        `${apiBaseUrl}/api/meetings/${meetingId}/recordings`,
         {
           params: { action },
         }
@@ -178,7 +172,7 @@ const DownloadRecordingsModal = ({
       for (let userRecordings of recordings) {
         for (let recording of userRecordings.recordings) {
           const response = await axios.delete(
-            `http://3.80.182.53:8080/api/meetings/${recording.meetingId}/recordings`,
+            `${apiBaseUrl}/api/meetings/${recording.meetingId}/recordings`,
             {
               params: { action, recordingId: recording.recordingId },
             }

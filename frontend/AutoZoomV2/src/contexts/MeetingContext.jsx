@@ -3,8 +3,15 @@ import axios from "axios";
 import moment from "moment";
 import { createContext, useCallback, useContext, useState } from "react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
+import productionConfig from "../config.production";
+import developmentConfig from "../config.development";
 
 const MeetingContext = createContext();
+const localDev = "production";
+const environment = localDev || "production";
+const config =
+  environment === "production" ? productionConfig : developmentConfig;
+const { apiBaseUrl } = config;
 
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [teacherName, setTeacherName] = useState("");
@@ -56,7 +63,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
 
   const createMeetingRequest = async (selectedUserId) => {
     const response = await axios.post(
-      `http://3.80.182.53:8080/api/meetings/${selectedUserId}`,
+      `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
         topic: `${teacherName} - ${courseName} - ${moment().format(
           "DD/MM/YYYY"
@@ -198,6 +205,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         displaySuccessToast,
         displayErrorToast,
         formatBytes,
+        apiBaseUrl,
       }}
     >
       {/* Users Occupation Box */}
@@ -211,6 +219,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         displayErrorToast={displayErrorToast}
         displaySuccessToast={displaySuccessToast}
         formatBytes={formatBytes}
+        apiBaseUrl={apiBaseUrl}
       />
       {children}
     </MeetingContext.Provider>

@@ -8,6 +8,8 @@ import {
 } from "./components";
 import { useMeetingContext } from "./contexts/MeetingContext";
 import { app_styles } from "./styles/Styles";
+import developmentConfig from "./config.development";
+import productionConfig from "./config.production";
 
 const App = () => {
   const {
@@ -20,7 +22,7 @@ const App = () => {
   } = useMeetingContext() || {};
   return (
     <Box sx={app_styles.box}>
-      <Flex direction='column' align='center' justify='center'>
+      <Flex direction="column" align="center" justify="center">
         <Header
           openModal={openModal}
           openRecordingsModal={openRecordingsModal}
