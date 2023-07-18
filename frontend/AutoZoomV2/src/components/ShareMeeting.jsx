@@ -27,7 +27,7 @@ const ShareMeeting = ({
           <Box sx={btn_box}>
             <Tooltip
               label='Click here to open Zoom meeting as HOST'
-              placement='right'
+              placement='top'
             >
               <Button
                 as='a'
@@ -45,7 +45,7 @@ const ShareMeeting = ({
         <Box sx={btn_box}>
           <Tooltip
             label='Click here to copy students join URL'
-            placement='right'
+            placement='bottom'
           >
             <Button
               onClick={onCopy}
@@ -62,7 +62,7 @@ const ShareMeeting = ({
           <Box sx={btn_box}>
             <Tooltip
               label='Click here to share the URL via WhatsApp'
-              placement='right'
+              placement='bottom'
             >
               <WhatsappShareButton
                 url={meetingDetails.join_url}

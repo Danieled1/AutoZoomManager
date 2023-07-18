@@ -57,7 +57,7 @@ function MeetingForm() {
               Enter the name of the course for this meeting.
             </FormHelperText>
           </FormControl>
-          <Tooltip label='Click here to create a new meeting' placement='right'>
+          <Tooltip label='Click here to create a new meeting' placement='bottom'>
             <Button
               colorScheme='teal'
               onClick={handleCreateMeeting}
