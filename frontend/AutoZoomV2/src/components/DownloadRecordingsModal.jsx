@@ -134,7 +134,7 @@ const DownloadRecordingsModal = ({
   const deleteMeetingRecordings = async (meetingId, action, recordingId) => {
     try {
       const response = await axios.delete(
-        `http://localhost:8080/api/meetings/${meetingId}/recordings`,
+        `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
         {
           params: { action },
         }
@@ -178,7 +178,7 @@ const DownloadRecordingsModal = ({
       for (let userRecordings of recordings) {
         for (let recording of userRecordings.recordings) {
           const response = await axios.delete(
-            `http://localhost:8080/api/meetings/${recording.meetingId}/recordings`,
+            `http://3.80.182.53:8080/api/meetings/${recording.meetingId}/recordings`,
             {
               params: { action, recordingId: recording.recordingId },
             }
