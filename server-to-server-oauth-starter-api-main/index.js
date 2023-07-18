@@ -34,12 +34,15 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
+    origin: [
+      "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
+      "http://localhost:8000",
+      "http://localhost:8001",
+    ],
   })
 );
 
-// Add Global Middlewares
-app.use([cors(), express.json(), express.urlencoded({ extended: false })]);
+app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
 /**

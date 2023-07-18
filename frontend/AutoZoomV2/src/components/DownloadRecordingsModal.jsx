@@ -23,6 +23,8 @@ import { DeleteIcon, DownloadIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import { format, isValid } from "date-fns";
 import { modal_styles } from "../styles/Styles";
+import ReusableTableComponent from "./common/TableComponent";
+import ButtonGroups from "./common/ButtonGroups";
 
 const DownloadRecordingsModal = ({
   isRecordingsModalOpen,
@@ -103,7 +105,6 @@ const DownloadRecordingsModal = ({
       );
     }
   };
-
   const downloadAllRecordings = (selectedRecording) => {
     try {
       if (selectedRecording) {
@@ -129,12 +130,11 @@ const DownloadRecordingsModal = ({
       );
     }
   };
-
   // NEED TO FINISH DELETE ALL FEATURE
   const deleteMeetingRecordings = async (meetingId, action, recordingId) => {
     try {
       const response = await axios.delete(
-        `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
+        `http://localhost:8080/api/meetings/${meetingId}/recordings`,
         {
           params: { action },
         }
@@ -172,14 +172,13 @@ const DownloadRecordingsModal = ({
       );
     }
   };
-
   const deleteAllRecordings = async (action) => {
     try {
       let deletedRecordings = [];
       for (let userRecordings of recordings) {
         for (let recording of userRecordings.recordings) {
           const response = await axios.delete(
-            `http://3.80.182.53:8080/api/meetings/${meetingId}/recordings`,
+            `http://localhost:8080/api/meetings/${recording.meetingId}/recordings`,
             {
               params: { action, recordingId: recording.recordingId },
             }
@@ -217,6 +216,42 @@ const DownloadRecordingsModal = ({
       );
     }
   };
+  const handleDateChange = (event) => setDate(event.target.value);
+
+  const handleDownloadAll = () => downloadAllRecordings();
+  const handleDeleteAll = () => deleteAllRecordings("trash");
+  const handleDownload = (recording) => {
+    console.log(recording);
+    downloadAllRecordings(recording);
+  };
+  const handleDelete = (recording) =>
+    deleteMeetingRecordings(
+      recording.meetingId,
+      "trash",
+      recording.recordingId
+    );
+
+  const headers = ["User", "Topic", "Date", "File Size", "Actions"]; // Add or remove headers as per the data
+  // ======= ERRORR ON BUTTON GROUPS OF DOWNLOAD AND DELETE !!!! =========
+
+  // ================================================================================================
+  const renderRow = (result, index) =>
+    result.recordings.map((recording, recordingIndex) => (
+      <Tr key={`${index}-${recordingIndex}`} className="row">
+        <Td>{result.user}</Td>
+        <Td className="truncate">{recording.topic}</Td>
+        <Td className="truncate">{recording.start_time}</Td>
+        <Td>{formatBytes(recording.file_size)}</Td>
+        <Td>
+          <ButtonGroups
+            onDownload={() => handleDownload(recording)}
+            onDelete={() => handleDelete(recording)}
+            isRowSpecific={true}
+            recording={recording}
+          />
+        </Td>
+      </Tr>
+    ));
   return (
     <Modal
       isOpen={isRecordingsModalOpen}
@@ -228,130 +263,25 @@ const DownloadRecordingsModal = ({
         <ModalHeader sx={modal_header}>Recordings Manager</ModalHeader>
         <ModalCloseButton sx={secondary_color} />
         <ModalBody sx={modal_body}>
-          <Input
-            type="date"
-            onChange={(e) => setDate(e.target.value)}
-            autoFocus
+          <Input type="date" onChange={handleDateChange} autoFocus />
+          <ButtonGroups
+            onFetch={fetchRecordings}
+            onDownloadAll={handleDownloadAll}
+            onDeleteAll={handleDeleteAll}
+            searchPerformed={searchPerformed}
+            downloadsInitiated={downloadsInitiated}
+            areRecordingsAvailable={recordings.length > 0}
           />
-          <ButtonGroup my={2}>
-            <Button onClick={fetchRecordings}>Fetch Recordings</Button>
-            {searchPerformed && (
-              <>
-                <Button
-                  onClick={() => downloadAllRecordings()}
-                  colorScheme="teal"
-                  disabled={recordings.length === 0}
-                >
-                  Download All
-                </Button>
-                {downloadsInitiated && (
-                  <Button
-                    onClick={() => deleteAllRecordings("trash")}
-                    colorScheme="red"
-                    disabled={recordings.length === 0}
-                  >
-                    Delete All
-                  </Button>
-                )}
-              </>
-            )}
-          </ButtonGroup>
-          <Table sx={table}>
-            <Thead>
-              <Tr>
-                <Th>User</Th>
-                <Th>Topic</Th>
-                <Th>Date</Th>
-                <Th>File Size</Th>
-                <Th>Actions</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {isLoading ? (
-                <Tr>
-                  <Td colSpan={5} textAlign="center">
-                    <Spinner size="xl" />
-                  </Td>
-                </Tr>
-              ) : (
-                <>
-                  {recordings.length === 0 ? (
-                    <Tr>
-                      <Td colSpan={5} textAlign="center">
-                        No recordings found for the selected date.
-                      </Td>
-                    </Tr>
-                  ) : (
-                    <>
-                      {recordings.map((result, index) =>
-                        result.recordings.map((recording, recordingIndex) => (
-                          <>
-                            <Tr
-                              key={`${index}-${recordingIndex}`}
-                              className="row"
-                            >
-                              <Td>{result.user}</Td>
-                              <Td className="truncate">{recording.topic}</Td>
-                              <Td className="truncate">
-                                {recording.start_time}
-                              </Td>
-                              <Td>{formatBytes(recording.file_size)}</Td>
-                              <Td>
-                                <ButtonGroup>
-                                  <Tooltip label="Download" placement="top">
-                                    <Button
-                                      onClick={() =>
-                                        downloadAllRecordings(recording)
-                                      }
-                                      colorScheme="teal"
-                                      size="sm"
-                                    >
-                                      <DownloadIcon />
-                                    </Button>
-                                  </Tooltip>
-                                  <Tooltip label="Delete" placement="top">
-                                    <Button
-                                      onClick={() =>
-                                        deleteMeetingRecordings(
-                                          recording.meetingId,
-                                          "trash",
-                                          recording.recordingId
-                                        )
-                                      }
-                                      colorScheme="red"
-                                      size="sm"
-                                    >
-                                      <DeleteIcon />
-                                    </Button>
-                                  </Tooltip>
-                                </ButtonGroup>
-                              </Td>
-                            </Tr>
-                          </>
-                        ))
-                      )}
-                      <Tr>
-                        <Td colSpan={5}>
-                          Total recordings {"  "}
-                          {recordings.reduce(
-                            (total, result) => total + result.recordings.length,
-                            0
-                          )}
-                        </Td>
-                      </Tr>
-                    </>
-                  )}
-                </>
-              )}
-            </Tbody>
-          </Table>
+          <ReusableTableComponent
+            data={recordings}
+            headers={headers}
+            renderRow={renderRow}
+            tableStyles={table}
+            isLoading={isLoading}
+          />
         </ModalBody>
         <ModalFooter>
-          <Button
-            // variant="ghost"
-            colorScheme="teal"
-            onClick={closeRecordingsModal}
-          >
+          <Button colorScheme="teal" onClick={closeRecordingsModal}>
             Close
           </Button>
         </ModalFooter>
