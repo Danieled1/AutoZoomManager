@@ -13,9 +13,10 @@ import {
   Td,
 } from "@chakra-ui/react";
 import { modal_styles } from "../styles/Styles";
-import ReusableTableComponent from "./common/TableComponent";
+
 import ButtonGroups from "./common/ButtonGroups";
 import CommonRecordingsHandler from "./common/commonRecordingsHandler";
+import ModalTable from "./common/ModalTable";
 
 const DownloadRecordingsModal = ({
   isRecordingsModalOpen,
@@ -131,7 +132,7 @@ const DownloadRecordingsModal = ({
             downloadsInitiated={downloadsInitiated}
             areRecordingsAvailable={recordings.length > 0}
           />
-          <ReusableTableComponent
+          <ModalTable
             data={recordings}
             headers={headers}
             renderRow={renderRow}

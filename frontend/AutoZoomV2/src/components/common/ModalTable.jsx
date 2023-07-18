@@ -15,7 +15,7 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-function ReusableTableComponent({
+function ModalTable({
   data,
   headers,
   renderRow,
@@ -46,4 +46,4 @@ function ReusableTableComponent({
   );
 }
 
-export default ReusableTableComponent;
+export default ModalTable;

@@ -7,16 +7,12 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Table,
-  Thead,
-  Tbody,
   Tr,
-  Th,
   Td,
   Badge,
 } from "@chakra-ui/react";
 import { modal_styles } from "../styles/Styles";
-import ReusableTableComponent from "./common/TableComponent";
+import ModalTable from "./common/ModalTable";
 
 function UsersModal({ usersMap, onClose, isOpen }) {
   const headers = ["Teacher", "Name", "Session Count", "Meeting IDs", "ID"];
@@ -47,7 +43,7 @@ function UsersModal({ usersMap, onClose, isOpen }) {
         </ModalHeader>
         <ModalCloseButton sx={modal_styles.secondary_color} />
         <ModalBody sx={modal_styles.modal_body}>
-          <ReusableTableComponent
+          <ModalTable
             data={Object.values(usersMap)}
             headers={headers}
             renderRow={renderRow}
