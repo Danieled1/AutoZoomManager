@@ -121,7 +121,7 @@ const CommonRecordingsHandler = {
           })
         );
         displaySuccessToast(
-          `Delete recording.`,
+          `Recording Deleted.`,
           `Successfully deleted the recording`,
           `info`
         );
@@ -164,7 +164,7 @@ const CommonRecordingsHandler = {
         recordings.flatMap((r) => r.recordings).length
       ) {
         displaySuccessToast(
-          `Delete recording.`,
+          `Recording Deleted.`,
           `Successfully deleted the recording`,
           `info`
         );

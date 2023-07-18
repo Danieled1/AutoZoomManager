@@ -1,14 +1,9 @@
-/**
- * dotenv gives us access to private variables held in a .env file
- * never expose this .env file publicly
- */
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { debug } = require("node:console");
-const axios = require("axios");
 const redis = require("./configs/redis");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 
@@ -16,7 +11,6 @@ const app = express();
 
 /**
  * Default connection to redis - port 6379
- * See https://github.com/redis/node-redis/blob/master/docs/client-configuration.md for additional config objects
  */
 (async () => {
   await redis.connect();
@@ -50,11 +44,8 @@ app.options("*", cors());
  */
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
-app.use("/api/webinars", tokenCheck, require("./routes/api/webinars"));
-// New POST route
 /**
  *    API Route Breakdown:
- *
  *    __Users__
  *    GET     /api/users --> list users -
  *    POST    /api/users/add --> create users -
@@ -66,16 +57,6 @@ app.use("/api/webinars", tokenCheck, require("./routes/api/webinars"));
  *    GET     /api/users/:userId/meetings --> list meetings -
  *    GET     /api/users/:userId/webinars --> list webinars -
  *    GET     /api/users/:userId/recordings --> list all recordings -
- *
- *    __Webinars__
- *    GET     /api/webinars/:webinarId --> get a webinar -
- *    POST    /api/webinars/:userId --> create a webinar -
- *    DELETE  /api/webinars/:webinarId --> delete a webinar
- *    PATCH   /api/webinars/:webinarId --> update a webinar -
- *    GET     /api/webinars/:webinarId/registrants --> list webinar registrants -
- *    PUT     /api/webinars/:webinarId/registrants/status --> update registrant's status -
- *    GET     /api/webinars/:webinarId/report/participants --> get webinar participant reports -
- *    POST    /api/webinars/:webinarId/registrants --> add a webinar registrant -
  *
  *    __Meetings__
  *    GET     /api/meetings/:meetingId --> get a meeting -
