@@ -16,7 +16,7 @@ USER node
 COPY --chown=node:node package*.json ./
 
 # Install production dependencies.
-RUN npm install 
+RUN npm ci 
 
 # Copy local code to the container image.
 COPY --chown=node:node . .
