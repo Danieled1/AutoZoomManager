@@ -4,10 +4,12 @@ export const app_styles = {
     width: "100%",
     padding: { base: 2, sm: 3, md: 4, lg: 5 },
     background: "linear-gradient(45deg, #6BC5E3, #ACD7EF, #E7F0FF)",
-    animation: "gradientAnimation 40s ease-in-out infinite",    display: "flex",
+    animation: "gradientAnimation 40s ease-in-out infinite",
+    display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     scrollBehavior: "smooth",
+    fontFamily: "'Roboto', sans-serif",
   },
 };
 const keyframes = `
@@ -118,6 +120,9 @@ export const meeting_styles = {
     fontSize: 24,
   },
   btn_box: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     maxWidth: {
       base: "80vw",
       sm: "60vw",
@@ -128,8 +133,9 @@ export const meeting_styles = {
     width: "full",
   },
   btn: {
-    marginBottom: 2,
     width: "full",
+    px: 4,
+    py: 2,
   },
 };
 
@@ -158,7 +164,6 @@ export const header_styles = {
     marginBottom: { base: 5, sm: 6, md: 8, lg: 10, xl: 10 },
   },
 };
-
 
 const styleTag = document.createElement("style");
 styleTag.textContent = keyframes;

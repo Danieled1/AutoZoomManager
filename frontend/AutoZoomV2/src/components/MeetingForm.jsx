@@ -22,7 +22,7 @@ function MeetingForm() {
     totalSessionsCount,
     createMeeting,
   } = useMeetingContext();
-  const { box, stack, heading } = meeting_styles;
+  const { box, stack, heading, btn_box, btn } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleCreateMeeting = async () => {
@@ -32,44 +32,45 @@ function MeetingForm() {
   };
 
   return (
-    <>
-      <Box sx={box}>
-        <Stack sx={stack}>
-          <FormControl>
-            <Heading sx={heading}>Create Meeting</Heading>
-            <FormLabel>Your Name</FormLabel>
-            <Input
-              placeholder='Your Name'
-              value={teacherName}
-              onChange={(e) => setTeacherName(e.target.value)}
-              autoFocus
-            />
-            <FormHelperText>Enter your full name.</FormHelperText>
-          </FormControl>
-          <FormControl>
-            <FormLabel>Course Name</FormLabel>
-            <Input
-              placeholder='Course Name'
-              value={courseName}
-              onChange={(e) => setCourseName(e.target.value)}
-            />
-            <FormHelperText>
-              Enter the name of the course for this meeting.
-            </FormHelperText>
-          </FormControl>
-          <Tooltip label='Click here to create a new meeting' placement='bottom'>
-            <Button
-              colorScheme='teal'
-              onClick={handleCreateMeeting}
-              disabled={isLoading || totalSessionsCount >= 20}
-              isLoading={isLoading}
-            >
-              Create Meeting
-            </Button>
-          </Tooltip>
-        </Stack>
-      </Box>
-    </>
+    <Box sx={box}>
+      <Stack sx={stack} spacing={5}>
+        <Heading sx={heading} as="h2">
+          Create Meeting
+        </Heading>
+        <FormControl>
+          <FormLabel>Your Name</FormLabel>
+          <Input
+            placeholder="Your Name"
+            value={teacherName}
+            onChange={(e) => setTeacherName(e.target.value)}
+            autoFocus
+          />
+          <FormHelperText>Enter your full name.</FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Course Name</FormLabel>
+          <Input
+            placeholder="Course Name"
+            value={courseName}
+            onChange={(e) => setCourseName(e.target.value)}
+          />
+          <FormHelperText>
+            Enter the name of the course for this meeting.
+          </FormHelperText>
+        </FormControl>
+        <Tooltip label="Click here to create a new meeting" placement="bottom">
+          <Button
+            colorScheme="teal"
+            onClick={handleCreateMeeting}
+            disabled={isLoading || totalSessionsCount >= 20}
+            isLoading={isLoading}
+            sx={btn}
+          >
+            Create Meeting
+          </Button>
+        </Tooltip>
+      </Stack>
+    </Box>
   );
 }
 
