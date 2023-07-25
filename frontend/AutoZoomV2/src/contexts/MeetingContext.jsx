@@ -13,7 +13,7 @@ import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "development";
+const localDev = "production"; //development
 const environment = localDev || "production";
 const config =
   environment === "production" ? productionConfig : developmentConfig;
@@ -87,10 +87,10 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
     setIsLoading(false);
   };
-  // Fetch live meetings when the component mounts
-  useEffect(() => {
-    fetchLiveMeetings();
-  }, []);
+  // // Fetch live meetings when the component mounts
+  // useEffect(() => {
+  //   fetchLiveMeetings();
+  // }, []);
 
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;

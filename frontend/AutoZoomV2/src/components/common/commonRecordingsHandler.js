@@ -4,7 +4,7 @@ import { format, isValid } from "date-fns";
 const CommonRecordingsHandler = {
   async fetchRecordings(apiBaseUrl, usersMap, date, setRecordings, displaySuccessToast, displayErrorToast, setIsLoading, setSearchPerformed) {
     try {
-      console.log("Current base url:", `${apiBaseUrl}`);
+      // console.log("Current base url:", `${apiBaseUrl}`);
       setIsLoading(true);
       const promises = Object.values(usersMap).map(async (user) => {
         const response = await axios.get(
@@ -48,7 +48,7 @@ const CommonRecordingsHandler = {
       const resultsWithRecordings = results.filter(
         (result) => result.recordings.length > 0
       );
-      console.log(resultsWithRecordings, "All the recordings");
+      // console.log(resultsWithRecordings, "All the recordings");
       setRecordings(resultsWithRecordings);
       setSearchPerformed(true);
       setIsLoading(false);
