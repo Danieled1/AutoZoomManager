@@ -1,17 +1,42 @@
 import { useToast, useClipboard } from "@chakra-ui/react";
 import axios from "axios";
 import moment from "moment";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
 import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "production";
+const localDev = "development";
 const environment = localDev || "production";
 const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
+
+const getUserLiveMeetings = async (userId) => {
+  try {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const fromDate = today.toISOString().split("T")[0];
+    const toDate = tomorrow.toISOString().split("T")[0];
+
+    const response = await axios.get(
+      `${apiBaseUrl}/api/users/${userId}/meetings?type=live&from=${fromDate}&to=${toDate}`
+    );
+    return response.data.meetings || [];
+  } catch (err) {
+    console.error(err.message);
+    return [];
+  }
+};
 
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [teacherName, setTeacherName] = useState("");
@@ -19,6 +44,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
   const [meetingDetails, setMeetingDetails] = useState({});
   const [isRecordingsModalOpen, setIsRecordingsModalOpen] = useState(false);
+  const [liveMeetings, setLiveMeetings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
@@ -31,6 +58,40 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       };
     }, {});
   });
+  // Fetch live meetings when the component mounts
+  const fetchLiveMeetings = async () => {
+    setIsLoading(true);
+    try {
+      // Get the user IDs from the users map
+      const userIds = Object.values(usersMap).map((user) => user.id);
+      // Get live meetings for all users
+      const meetingsPromises = userIds.map((userId) =>
+        getUserLiveMeetings(userId)
+      );
+      const meetingsData = await Promise.all(meetingsPromises);
+      // Flatten the array of meetings data
+      const allMeetings = [].concat(...meetingsData);
+      // Get today's date at the start of the day
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      // Filter the meetings to include only those scheduled for today
+      const liveMeetings = allMeetings.filter((meeting) => {
+        const meetingDate = new Date(meeting.start_time);
+        meetingDate.setHours(0, 0, 0, 0);
+        return +meetingDate === +today; // Use unary plus operator to compare dates by their numeric value
+      });
+      setLiveMeetings(liveMeetings);
+      console.log("live meetings", liveMeetings);
+    } catch (err) {
+      console.error(err.message);
+      setLiveMeetings([]);
+    }
+    setIsLoading(false);
+  };
+  // Fetch live meetings when the component mounts
+  useEffect(() => {
+    fetchLiveMeetings();
+  }, []);
 
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
@@ -58,7 +119,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const randomIndex = Math.floor(Math.random() * users.length);
     const selectedUserId = users[randomIndex];
     const selectedUser = usersMap[selectedUserId];
-    return selectedUser;
+    return { selectedUser, selectedUserId };
   }, [usersMap]);
 
   const createMeetingRequest = async (selectedUserId) => {
@@ -92,6 +153,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const updateUserSessions = (selectedUserId, data) => {
     setUsersMap((prevUsersMap) => {
       const prevUser = prevUsersMap[selectedUserId];
+      console.log(prevUser, selectedUserId, data);
       if (!prevUser) {
         return prevUsersMap;
       }
@@ -141,7 +203,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       return;
     }
 
-    const selectedUser = selectRandomUser();
+    const { selectedUser, selectedUserId } = selectRandomUser();
 
     if (
       !selectedUser ||
@@ -157,7 +219,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     try {
       const data = await createMeetingRequest(selectedUser.id);
       updateMeetingDetails(data);
-      updateUserSessions(selectedUser.id, data);
+      updateUserSessions(selectedUserId, data);
       updateTotalSessionsCount();
       displaySuccessToast(
         "Meeting Created.",
@@ -180,7 +242,9 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-
+  useEffect(() => {
+    console.log(usersMap, "usersmap - useEffect");
+  }, [usersMap]);
   return (
     <MeetingContext.Provider
       value={{
@@ -206,10 +270,12 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         displayErrorToast,
         formatBytes,
         apiBaseUrl,
+        fetchLiveMeetings,
+        liveMeetings,
       }}
     >
       {/* Users Occupation Box */}
-      <UsersModal usersMap={usersMap} onClose={closeModal} isOpen={isOpen} />
+      <UsersModal onClose={closeModal} isOpen={isOpen} />
 
       {/* Download & Delete Recordings Box */}
       <DownloadRecordingsModal

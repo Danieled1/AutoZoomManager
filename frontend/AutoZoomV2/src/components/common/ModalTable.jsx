@@ -15,13 +15,8 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-function ModalTable({
-  data,
-  headers,
-  renderRow,
-  tableStyles,
-  isLoading,
-}) {
+function ModalTable({ data, headers, renderRow, tableStyles, isLoading }) {
+
   return (
     <Table sx={tableStyles}>
       <Thead>
@@ -39,7 +34,7 @@ function ModalTable({
             </Td>
           </Tr>
         ) : (
-          data.map(renderRow)
+          data && data.map(renderRow)
         )}
       </Tbody>
     </Table>

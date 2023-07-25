@@ -13,22 +13,30 @@ import {
 } from "@chakra-ui/react";
 import { modal_styles } from "../styles/Styles";
 import ModalTable from "./common/ModalTable";
+import { useMeetingContext } from "../contexts/MeetingContext";
 
-function UsersModal({ usersMap, onClose, isOpen }) {
-  const headers = ["Teacher", "Name", "Session Count", "Meeting IDs", "ID"];
+function UsersModal({ onClose, isOpen }) {
+  const headers = [
+    "Teacher",
+    "Name",
+    "Session Count",
+    "Meeting IDs",
+    "Created At",
+  ];
+  const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
 
-  const renderRow = (user, index) => (
-    <Tr key={user.id} className="row">
-      <Td>{user.currentTeacher}</Td>
-      <Td>{user.name}</Td>
-      <Td>{user.sessions}</Td>
-      <Td>{user.meetingIds.join(", ")}</Td>
-      <Td>{user.id}</Td>
+  const renderRow = (meeting, index) => (
+    <Tr key={meeting.id} className="row">
+      <Td>{meeting.topic}</Td>
+      <Td>{meeting.host_id}</Td>
+      <Td>{meeting.duration}</Td>
+      <Td>{meeting.id}</Td>
+      <Td>{meeting.created_at}</Td>
       {/* Add a badge when the user has reached the maximum sessions */}
-      {user.sessions >= 2 && (
+      {meeting.status === "started" && (
         <Td>
-          <Badge colorScheme="red" p="1" fontSize="0.8em">
-            Max sessions reached
+          <Badge colorScheme="green" p="1" fontSize="0.8em">
+            Meeting Started
           </Badge>
         </Td>
       )}
@@ -38,13 +46,11 @@ function UsersModal({ usersMap, onClose, isOpen }) {
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent sx={modal_styles.modal_content}>
-        <ModalHeader sx={modal_styles.modal_header}>
-          Users Occupation
-        </ModalHeader>
+        <ModalHeader sx={modal_styles.modal_header}>Live Meetings</ModalHeader>
         <ModalCloseButton sx={modal_styles.secondary_color} />
         <ModalBody sx={modal_styles.modal_body}>
           <ModalTable
-            data={Object.values(usersMap)}
+            data={liveMeetings}
             headers={headers}
             renderRow={renderRow}
             tableStyles={modal_styles.table}
