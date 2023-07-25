@@ -19,25 +19,6 @@ const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
 
-const getUserLiveMeetings = async (userId) => {
-  try {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    const fromDate = today.toISOString().split("T")[0];
-    const toDate = tomorrow.toISOString().split("T")[0];
-
-    const response = await axios.get(
-      `${apiBaseUrl}/api/users/${userId}/meetings?type=live&from=${fromDate}&to=${toDate}`
-    );
-    return response.data.meetings || [];
-  } catch (err) {
-    console.error(err.message);
-    return [];
-  }
-};
-
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
@@ -58,6 +39,24 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       };
     }, {});
   });
+  const getUserLiveMeetings = async (userId) => {
+    try {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const fromDate = today.toISOString().split("T")[0];
+      const toDate = tomorrow.toISOString().split("T")[0];
+
+      const response = await axios.get(
+        `${apiBaseUrl}/api/users/${userId}/meetings?type=live&from=${fromDate}&to=${toDate}`
+      );
+      return response.data.meetings || [];
+    } catch (err) {
+      console.error(err.message);
+      return [];
+    }
+  };
   // Fetch live meetings when the component mounts
   const fetchLiveMeetings = async () => {
     setIsLoading(true);
