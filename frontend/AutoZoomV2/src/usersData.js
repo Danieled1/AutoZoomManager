@@ -56,8 +56,15 @@ const initialUsers = [
     currentTeacher: "",
   },
   {
-    name: "Simon",
+    name: "Simon Bar",
     id: "y2YOsTcFRJOW35Kqn41idg",
+    sessions: 0,
+    meetingIds: [],
+    currentTeacher: "",
+  },
+  {
+    name: "Emil Riza",
+    id: "K4vA4XKUSoKC-oYP5I4UOA",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",

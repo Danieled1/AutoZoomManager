@@ -16,32 +16,32 @@ import ModalTable from "./common/ModalTable";
 import { useMeetingContext } from "../contexts/MeetingContext";
 
 function UsersModal({ onClose, isOpen }) {
-  const headers = [
-    "Teacher",
-    "Name",
-    "Session Count",
-    "Meeting IDs",
-    "Created At",
-  ];
+  const headers = ["Teacher", "Course", "Date", "Meeting ID", "Created At"];
   const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
 
-  const renderRow = (meeting, index) => (
-    <Tr key={meeting.id} className="row">
-      <Td>{meeting.topic}</Td>
-      <Td>{meeting.host_id}</Td>
-      <Td>{meeting.duration}</Td>
-      <Td>{meeting.id}</Td>
-      <Td>{meeting.created_at}</Td>
-      {/* Add a badge when the user has reached the maximum sessions */}
-      {meeting.status === "started" && (
-        <Td>
-          <Badge colorScheme="green" p="1" fontSize="0.8em">
-            Meeting Started
-          </Badge>
-        </Td>
-      )}
-    </Tr>
-  );
+  const renderRow = (meeting, index) => {
+    // Split the topic into teacher, course, and date
+    const [teacher, course, date] = meeting.topic.split(" - ");
+    const createdDate = new Date(meeting.created_at).toLocaleString();
+
+    return (
+      <Tr key={meeting.id} className="row">
+        <Td>{teacher}</Td>
+        <Td>{course}</Td>
+        <Td>{date}</Td>
+        <Td>{meeting.id}</Td>
+        <Td>{createdDate}</Td>
+        {/* Add a badge when the user has reached the maximum sessions */}
+        {meeting.status === "started" && (
+          <Td>
+            <Badge colorScheme="green" p="1" fontSize="0.8em">
+              Meeting Started
+            </Badge>
+          </Td>
+        )}
+      </Tr>
+    );
+  };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />

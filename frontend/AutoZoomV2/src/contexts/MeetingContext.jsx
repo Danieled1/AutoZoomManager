@@ -13,7 +13,7 @@ import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "production"; //development
+const localDev = "development"; //development
 const environment = localDev || "production";
 const config =
   environment === "production" ? productionConfig : developmentConfig;
@@ -61,9 +61,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const fetchLiveMeetings = async () => {
     setIsLoading(true);
     try {
-      // Get the user IDs from the users map
       const userIds = Object.values(usersMap).map((user) => user.id);
-      // Get live meetings for all users
       const meetingsPromises = userIds.map((userId) =>
         getUserLiveMeetings(userId)
       );
@@ -80,18 +78,23 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         return +meetingDate === +today; // Use unary plus operator to compare dates by their numeric value
       });
       setLiveMeetings(liveMeetings);
-      console.log("live meetings", liveMeetings);
     } catch (err) {
       console.error(err.message);
       setLiveMeetings([]);
     }
     setIsLoading(false);
   };
-  // // Fetch live meetings when the component mounts
-  // useEffect(() => {
-  //   fetchLiveMeetings();
-  // }, []);
+  useEffect(() => {
+    fetchLiveMeetings(); // Fetch immediately when component mounts
 
+    const intervalId = setInterval(() => {
+      console.time("Fetched live meetings time");
+      fetchLiveMeetings(); // Fetch every 5 minutes
+      console.timeEnd("Fetched live meetings time");
+    }, 300000);
+
+    return () => clearInterval(intervalId); // Clear interval when component unmounts
+  }, []);
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
     if (topic && join_url) {
@@ -152,7 +155,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const updateUserSessions = (selectedUserId, data) => {
     setUsersMap((prevUsersMap) => {
       const prevUser = prevUsersMap[selectedUserId];
-      console.log(prevUser, selectedUserId, data);
       if (!prevUser) {
         return prevUsersMap;
       }
@@ -241,9 +243,10 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-  useEffect(() => {
-    console.log(usersMap, "usersmap - useEffect");
-  }, [usersMap]);
+  // Follow the usersMap object through the usage
+  // useEffect(() => {
+  //   console.log(usersMap, "usersmap - useEffect");
+  // }, [usersMap]);
   return (
     <MeetingContext.Provider
       value={{

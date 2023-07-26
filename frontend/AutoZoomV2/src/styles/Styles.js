@@ -3,13 +3,18 @@ export const app_styles = {
     minHeight: "100vh",
     width: "100%",
     padding: { base: 2, sm: 3, md: 4, lg: 5 },
-    background: "linear-gradient(45deg, #6BC5E3, #ACD7EF, #E7F0FF)",
+    background: "linear-gradient(0deg, #6BC5E3, #ACD7EF, #E7F0FF)",
     animation: "gradientAnimation 40s ease-in-out infinite",
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
     scrollBehavior: "smooth",
     fontFamily: "'Roboto', sans-serif",
+    cursor: "default",
+    transition: "all 0.2s ease",
+    animation: "fadeInAnimation ease-in 1s",
+    animationIterationCount: "1",
+    animationFillMode: "backwards",
   },
 };
 const keyframes = `
@@ -26,6 +31,13 @@ const keyframes = `
     90% { background-position: 0% 0%; }
     100% { background-position: 100% 50%; }
   }
+  @keyframes fadeInAnimation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 `;
 export const modal_styles = {
   modal_content: {
@@ -155,13 +167,11 @@ export const header_styles = {
     left: "50%",
     transform: "translate(-50%, -50%)",
   },
-  span_box: {
-    cursor: "text",
-  },
   sub_header: {
     fontSize: { base: "sm", sm: "md", md: "lg", lg: "lg", xl: "xl" },
     textAlign: "center",
     marginBottom: { base: 5, sm: 6, md: 8, lg: 10, xl: 10 },
+    cursor: "default",
   },
 };
 

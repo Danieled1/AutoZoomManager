@@ -15,7 +15,7 @@ function Header({ openModal, openRecordingsModal }) {
     <>
       <Heading sx={heading}>
         AutoZoom{" "}
-        <Box as="span" onClick={handleFetchLiveMeetings} colorscheme="teal" sx={span_box}>
+        <Box as="span" onClick={handleFetchLiveMeetings} colorscheme="teal" >
           G
         </Box>
         enerato
@@ -23,7 +23,7 @@ function Header({ openModal, openRecordingsModal }) {
           as="span"
           onClick={openRecordingsModal}
           colorscheme="teal"
-          sx={span_box}
+
         >
           r
         </Box>
