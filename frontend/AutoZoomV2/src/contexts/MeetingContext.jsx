@@ -13,7 +13,7 @@ import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "development"; //development
+const localDev = "production"; //development
 const environment = localDev || "production";
 const config =
   environment === "production" ? productionConfig : developmentConfig;
