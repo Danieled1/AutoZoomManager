@@ -21,11 +21,14 @@ const ShareMeeting = ({
 
   return (
     <Box sx={box}>
-      <Heading sx={heading}>Share Meeting</Heading>
       <Stack sx={stack}>
+        <Heading sx={heading}>Share Meeting</Heading>
         {meetingDetails.start_url && (
           <Box sx={btn_box}>
-            <Tooltip label="Click here to open Zoom meeting as HOST" placement="bottom">
+            <Tooltip
+              label="Click here to open Zoom meeting as HOST"
+              placement="bottom"
+            >
               <Button
                 as="a"
                 href={meetingDetails.start_url}
@@ -40,7 +43,10 @@ const ShareMeeting = ({
           </Box>
         )}
         <Box sx={btn_box}>
-          <Tooltip label="Click here to copy students join URL" placement="bottom">
+          <Tooltip
+            label="Click here to copy students join URL"
+            placement="bottom"
+          >
             <Button
               onClick={onCopy}
               colorScheme="teal"
@@ -54,7 +60,10 @@ const ShareMeeting = ({
         </Box>
         {meetingDetails.join_url && (
           <Box sx={btn_box}>
-            <Tooltip label="Click here to share the URL via WhatsApp" placement="bottom">
+            <Tooltip
+              label="Click here to share the URL via WhatsApp"
+              placement="bottom"
+            >
               <WhatsappShareButton
                 url={meetingDetails.join_url}
                 title={generateWhatsAppMessage()}
@@ -62,7 +71,7 @@ const ShareMeeting = ({
               >
                 <IconButton
                   as="a"
-                  colorScheme="blue"
+                  colorScheme="teal"
                   variant="outline"
                   aria-label="Share on WhatsApp"
                   sx={{

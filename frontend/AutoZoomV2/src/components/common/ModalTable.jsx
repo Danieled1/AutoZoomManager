@@ -15,10 +15,16 @@ import {
   Badge,
   Spinner,
 } from "@chakra-ui/react";
-function ModalTable({ data, headers, renderRow, tableStyles, isLoading }) {
-
+function ModalTable({
+  data,
+  headers,
+  renderRow,
+  tableStyles,
+  isLoading,
+  size,
+}) {
   return (
-    <Table sx={tableStyles}>
+    <Table sx={tableStyles} size={size}>
       <Thead>
         <Tr>
           {headers.map((header, index) => (

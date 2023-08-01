@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
 import { meeting_styles } from "../styles/Styles";
-
+import Select from "react-select";
 function MeetingForm() {
   const {
     teacherName,
@@ -30,7 +30,34 @@ function MeetingForm() {
     await createMeeting();
     setIsLoading(false);
   };
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      color: state.isSelected ? "white" : "black",
+      backgroundColor: state.isSelected
+        ? "teal"
+        : state.isFocused
+        ? "#b2dfdb"
+        : "white",
+      transition: "0.3s ease",
+    }),
+    control: (provided) => ({
+      ...provided,
+      borderColor: "teal",
+      boxShadow: "none",
+      "&:hover": {
+        borderColor: "teal",
+      },
+    }),
+  };
 
+  const options = [
+    { value: "Full Stack", label: "Full Stack" },
+    { value: "Cyber", label: "Cyber" },
+    { value: "Qa", label: "Qa" },
+    { value: "Data&Digital", label: "Data&Digital" },
+    { value: "AI", label: "AI" },
+  ];
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
@@ -40,22 +67,30 @@ function MeetingForm() {
         <FormControl>
           <FormLabel>Your Name</FormLabel>
           <Input
-            placeholder="Your Name"
             value={teacherName}
             onChange={(e) => setTeacherName(e.target.value)}
-            autoFocus
+            placeholder="Your Name"
+            borderColor="teal"
+            _hover={{
+              borderColor: "teal",
+            }}
+            _focus={{
+              borderColor: "teal",
+              boxShadow: "0 0 0 1px teal",
+            }}
           />
           <FormHelperText>Enter your full name.</FormHelperText>
         </FormControl>
         <FormControl>
           <FormLabel>Course Name</FormLabel>
-          <Input
-            placeholder="Course Name"
-            value={courseName}
-            onChange={(e) => setCourseName(e.target.value)}
+          <Select
+            styles={customStyles}
+            options={options}
+            value={options.find((option) => option.value === courseName)}
+            onChange={(option) => setCourseName(option.value)}
           />
           <FormHelperText>
-            Enter the name of the course for this meeting.
+            Select the name of the course for this meeting.
           </FormHelperText>
         </FormControl>
         <Tooltip label="Click here to create a new meeting" placement="bottom">

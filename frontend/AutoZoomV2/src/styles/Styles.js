@@ -120,8 +120,12 @@ export const meeting_styles = {
   },
   stack: {
     spacing: 5,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
     ".labels": {
-      fontSize: "md",
+      fontSize: "xl",
       fontWeight: "bold",
     },
   },
@@ -129,7 +133,7 @@ export const meeting_styles = {
     fontSize: "md",
     color: "teal.500",
     marginBottom: 4,
-    fontSize: 24,
+    fontSize: 26,
   },
   btn_box: {
     display: "flex",
@@ -160,6 +164,21 @@ export const header_styles = {
     padding: "0.5em 1em",
     width: "fit-content",
     position: "relative",
+    _after: {
+      content: '""',
+      position: "absolute",
+      left: 0,
+      bottom: 0,
+      height: "3px",
+      width: "100%",
+      backgroundImage:
+        "linear-gradient(90deg, teal.500 0%, teal.200 50%, teal.500 100%)",
+      animation: "pulse 2.2s infinite alternate",
+    },
+    "@keyframes pulse": {
+      "0%": { transform: "scaleX(0)" },
+      "100%": { transform: "scaleX(0.9)" },
+    },
   },
   waveEffect: {
     position: "absolute",
