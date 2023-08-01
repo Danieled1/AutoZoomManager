@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
 import { meeting_styles } from "../styles/Styles";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 function MeetingForm() {
   const {
     teacherName,
@@ -24,7 +24,7 @@ function MeetingForm() {
   } = useMeetingContext();
   const { box, stack, heading, btn_box, btn } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
-
+  const [optionValue, setOptionValue] = useState("");
   const handleCreateMeeting = async () => {
     setIsLoading(true);
     await createMeeting();
@@ -57,7 +57,13 @@ function MeetingForm() {
     { value: "Qa", label: "Qa" },
     { value: "Data&Digital", label: "Data&Digital" },
     { value: "AI", label: "AI" },
+    { value: "Other", label: "Other (type your own)" },
   ];
+  const handleInputChange = (inputValue, actionMeta) => {
+    if (actionMeta.action === "create-option" && inputValue !== "Other") {
+      setCourseName(`Other: ${inputValue}`);
+    }
+  };
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
@@ -83,11 +89,16 @@ function MeetingForm() {
         </FormControl>
         <FormControl>
           <FormLabel>Course Name</FormLabel>
-          <Select
+          <CreatableSelect
             styles={customStyles}
             options={options}
-            value={options.find((option) => option.value === courseName)}
+            value={
+              courseName.startsWith("Other:")
+                ? { label: courseName, value: courseName }
+                : options.find((option) => option.value === courseName)
+            }
             onChange={(option) => setCourseName(option.value)}
+            onInputChange={handleInputChange}
           />
           <FormHelperText>
             Select the name of the course for this meeting.
