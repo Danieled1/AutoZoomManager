@@ -129,7 +129,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
         topic: `${teacherName} - ${courseName} - ${moment().format(
-          "DD.MM.YYYY"cd .
+          "DD/MM/YYYY"
         )}`,
         duration: 420, // Meeting duration in minutes
         settings: {
