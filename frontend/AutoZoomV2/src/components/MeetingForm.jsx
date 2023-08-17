@@ -8,6 +8,8 @@ import {
   FormHelperText,
   Button,
   Tooltip,
+  Text,
+  Divider,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
@@ -116,6 +118,21 @@ function MeetingForm() {
           </Button>
         </Tooltip>
       </Stack>
+      <Divider my={4} />
+      <Heading
+        as="p"
+        color="red.600"
+        fontWeight="bold"
+        mb={3}
+        mt={3}
+        textAlign="center"
+        fontSize="xl"
+      >
+        Clicking 'Create Meeting' will open the Zoom meeting in a new tab!
+      </Heading>
+      <Text color="red.500" textAlign="center" fontSize={"md"}>
+        Please ensure you allow pop-ups from this site.
+      </Text>
     </Box>
   );
 }

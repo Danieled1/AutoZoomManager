@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Heading,
@@ -18,7 +18,6 @@ const ShareMeeting = ({
   generateWhatsAppMessage,
 }) => {
   const { box, heading, stack, btn_box, btn } = meeting_styles;
-
   return (
     <Box sx={box}>
       <Stack sx={stack}>
@@ -26,7 +25,7 @@ const ShareMeeting = ({
         {meetingDetails.start_url && (
           <Box sx={btn_box}>
             <Tooltip
-              label="Click here to open Zoom meeting as HOST"
+              label="Click here if the Zoom meeting did not start automatically"
               placement="bottom"
             >
               <Button

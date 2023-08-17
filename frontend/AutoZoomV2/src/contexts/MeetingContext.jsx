@@ -18,8 +18,15 @@ const environment = localDev || "production";
 const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
-
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+}
 export const MeetingProvider = ({ children, initialUsersMap }) => {
+  const shuffledUsers = shuffle([...initialUsersMap]);
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
@@ -31,7 +38,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [usersMap, setUsersMap] = useState(() => {
-    return initialUsersMap.reduce((map, user, index) => {
+    return shuffledUsers.reduce((map, user, index) => {
       const userId = `user${index + 1}`;
       return {
         ...map,
@@ -116,11 +123,23 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
     return true;
   };
+
+  // BUG = NOT PICKING USERS CORRECTLY ============================================================================
   const selectRandomUser = useCallback(() => {
-    const users = Object.keys(usersMap);
-    const randomIndex = Math.floor(Math.random() * users.length);
-    const selectedUserId = users[randomIndex];
+    // Filter users who have less than 2 sessions
+    const eligibleUsers = Object.keys(usersMap).filter(
+      (userId) => usersMap[userId].sessions < 2
+    );
+
+    if (eligibleUsers.length === 0) {
+      // Return an error or placeholder value if no users are left
+      return null;
+    }
+
+    const randomIndex = Math.floor(Math.random() * eligibleUsers.length);
+    const selectedUserId = eligibleUsers[randomIndex];
     const selectedUser = usersMap[selectedUserId];
+
     return { selectedUser, selectedUserId };
   }, [usersMap]);
 
@@ -206,14 +225,10 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
 
     const { selectedUser, selectedUserId } = selectRandomUser();
 
-    if (
-      !selectedUser ||
-      selectedUser.sessions >= 2 ||
-      totalSessionsCount >= 18
-    ) {
+    if (!selectedUser) {
       displayErrorToast(
-        "Session Limit Reached.",
-        "You have reached the maximum session limit."
+        "No Eligible Users.",
+        "All users have reached the maximum session limit."
       );
       return;
     }
@@ -226,6 +241,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         "Meeting Created.",
         "The meeting has been successfully created."
       );
+      window.open(data.start_url, "_blank");
     } catch (err) {
       displayErrorToast(
         "Failed to Create Meeting.",
