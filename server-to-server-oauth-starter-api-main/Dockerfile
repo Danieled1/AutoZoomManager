@@ -12,6 +12,7 @@ CMD ["node", "index.js"]
 
 FROM base as dev
 ENV NODE_ENV=development
+ENV CHOKIDAR_USEPOLLING=true
 RUN npm install -g nodemon && npm install
-COPY . /
-CMD ["nodemon", "index.js"]
+COPY . /app/
+CMD ["nodemon", "--legacy-watch", "index.js"]

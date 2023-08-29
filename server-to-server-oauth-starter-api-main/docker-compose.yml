@@ -10,12 +10,29 @@ services:
     image: danieled1/autozoommanager-server:latest
     volumes:
       - .:/app
-      - /app/node_modules
+      # - /app/node_modules
     ports:
       - '8080:8080'
     command: npm run start
     environment:
       NODE_ENV: production
+    depends_on:
+      - redis
+    restart: always
+
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    volumes:
+      - .:/app
+      # - /app/node_modules
+    ports:
+      - '8081:8081'
+    command: npm run dev
+    environment:
+      NODE_ENV: development
     depends_on:
       - redis
     restart: always

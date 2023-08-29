@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
-        "dev": "nodemon index.js"
+        "dev": "nodemon --legacy-watch index.js"
     },
     "author": "Brandon Abajelo",
     "license": "ISC",
@@ -16,6 +16,7 @@
         "dotenv": "^16.0.2",
         "express": "^4.18.1",
         "moment": "^2.29.4",
+        "mongoose": "^7.4.3",
         "query-string": "^7.1.1",
         "redis": "^4.3.1"
     },

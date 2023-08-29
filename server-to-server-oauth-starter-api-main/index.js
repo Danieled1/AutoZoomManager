@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const { debug } = require("node:console");
 const redis = require("./configs/redis");
 const { tokenCheck } = require("./middlewares/tokenCheck");
+const connectDB = require("./configs/mongo");
 
 const app = express();
 
@@ -23,7 +24,7 @@ redis.on("connect", (err) => {
     console.log("Connected to redis successfully");
   }
 });
-
+connectDB();
 app.use(cookieParser());
 
 app.use(
@@ -45,6 +46,9 @@ app.options("*", cors());
  */
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
+app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
+app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
+
 /**
  *    API Route Breakdown:
  *    __Users__
