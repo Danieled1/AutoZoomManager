@@ -19,6 +19,7 @@ app.use(
   cors({
     origin: [
       "https://zoom-generator-frontend.vercel.app",
+      "https://zoom-generator-backend.vercel.app",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
