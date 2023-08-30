@@ -13,8 +13,8 @@ import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "production"; //development
-const environment = localDev || "production";
+const localDev = "production";
+const environment = localDev 
 const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
