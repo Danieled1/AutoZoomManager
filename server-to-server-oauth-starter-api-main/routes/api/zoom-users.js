@@ -8,11 +8,11 @@ router.get("/eligible", async (req, res) => {
   try {
     const eligibleZoomUsers = await ZoomUser.find({ sessions: { $lt: 2 } });
     if (!eligibleZoomUsers || eligibleZoomUsers.length === 0) {
-      return res.status(404).json({ message: "No eligible users found." });
+      return res.status(204).json({ message: "No free users left to open a meeting with." });
     }
     return res
       .status(200)
-      .send({ length: eligibleZoomUsers.length, eligibleZoomUsers });
+      .send({ eligibleZoomUsers });
   } catch (err) {
     return res
       .status(500)

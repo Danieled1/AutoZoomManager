@@ -1,21 +1,21 @@
-const redis = require("../configs/redis");
+// const redis = require("../configs/redis");
 const { getToken, setToken } = require("../utils/token");
+const TokenModel = require("../models/TokenModel");
 
 /**
  * Middleware that checks if a valid (not expired) token exists in redis
  * If invalid or expired, generate a new token, set in redis, and append to http request
  */
 const tokenCheck = async (req, res, next) => {
-  const redis_token = await redis.get("access_token");
-
-  let token = redis_token;
+  const tokenData = await TokenModel.findOne().sort({ expires_in: -1 });
+  let token = tokenData;
 
   /**
    * Redis returns:
    * -2 if the key does not exist
    * -1 if the key exists but has no associated expire
    */
-  if (!redis_token || ["-1", "-2"].includes(redis_token)) {
+  if (!tokenData || ["-1", "-2"].includes(tokenData)) {
     const { access_token, expires_in, error } = await getToken();
 
     if (error) {
@@ -32,7 +32,7 @@ const tokenCheck = async (req, res, next) => {
 
   req.headerConfig = {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token.access_token}`,
     },
   };
   return next();

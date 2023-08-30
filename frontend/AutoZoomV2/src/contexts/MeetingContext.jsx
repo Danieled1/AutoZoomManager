@@ -27,6 +27,8 @@ function shuffle(array) {
 }
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const shuffledUsers = shuffle([...initialUsersMap]);
+  const [areUsersAvailable, setAreUsersAvailable] = useState(true);
+
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
@@ -125,25 +127,38 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
 
   // BUG = NOT PICKING USERS CORRECTLY ============================================================================
-  const selectRandomUser = useCallback(() => {
-    // Filter users who have less than 2 sessions
-    const eligibleUsers = Object.keys(usersMap).filter(
-      (userId) => usersMap[userId].sessions < 2
-    );
+  const selectRandomUser = useCallback(async () => {
+    try {
+      // Fetch eligible users from the server
+      const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
+      const eligibleUsers = response.data.eligibleZoomUsers;
+      console.log(eligibleUsers, "eligibleUsers");
+      if (!eligibleUsers || eligibleUsers.length === 0) {
+        displayErrorToast(
+          "No Eligible Users.",
+          "There are no eligible users left to create a meeting."
+        );
+        setAreUsersAvailable(false); // Update the state to reflect no users are available
+        return null;
+      }
 
-    if (eligibleUsers.length === 0) {
-      // Return an error or placeholder value if no users are left
+      const randomIndex = Math.floor(Math.random() * eligibleUsers.length);
+      const selectedUser = eligibleUsers[randomIndex];
+      const selectedUserId = selectedUser.zoomAccountId;
+      console.log(selectedUserId, "userid");
+
+      return { selectedUser, selectedUserId };
+    } catch (err) {
+      displayErrorToast(
+        "Failed to Create Meeting.",
+        "An error occurred while creating the meeting."
+      );
       return null;
     }
-
-    const randomIndex = Math.floor(Math.random() * eligibleUsers.length);
-    const selectedUserId = eligibleUsers[randomIndex];
-    const selectedUser = usersMap[selectedUserId];
-
-    return { selectedUser, selectedUserId };
-  }, [usersMap]);
+  }, []);
 
   const createMeetingRequest = async (selectedUserId) => {
+    console.log(selectedUserId, "SELECTED in createMeetingRequest");
     const response = await axios.post(
       `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
@@ -223,8 +238,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       return;
     }
 
-    const { selectedUser, selectedUserId } = selectRandomUser();
-
+    const { selectedUser, selectedUserId } = await selectRandomUser();
+    console.log(selectedUser, "selectedUser");
     if (!selectedUser) {
       displayErrorToast(
         "No Eligible Users.",
@@ -233,7 +248,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       return;
     }
     try {
-      const data = await createMeetingRequest(selectedUser.id);
+      const data = await createMeetingRequest(selectedUser.zoomAccountId);
       updateMeetingDetails(data);
       updateUserSessions(selectedUserId, data);
       updateTotalSessionsCount();
@@ -290,6 +305,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         apiBaseUrl,
         fetchLiveMeetings,
         liveMeetings,
+        areUsersAvailable,
       }}
     >
       {/* Users Occupation Box */}

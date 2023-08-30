@@ -1,6 +1,6 @@
 // config.production.js
 const config = {
-  apiBaseUrl: "http://3.80.182.53:8080",
+  apiBaseUrl: "https://zoom-generator-frontend.vercel.app",
 };
 
 export default config;

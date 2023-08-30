@@ -23,6 +23,7 @@ function MeetingForm() {
     setCourseName,
     totalSessionsCount,
     createMeeting,
+    areUsersAvailable
   } = useMeetingContext();
   const { box, stack, heading, btn_box, btn } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
@@ -110,7 +111,7 @@ function MeetingForm() {
           <Button
             colorScheme="teal"
             onClick={handleCreateMeeting}
-            disabled={isLoading || totalSessionsCount >= 20}
+            disabled={isLoading || !areUsersAvailable}
             isLoading={isLoading}
             sx={btn}
           >

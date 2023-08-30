@@ -1,11 +1,6 @@
 version: '3.8'
 
 services:
-  redis:
-    image: redis
-    ports:
-      - '6379:6379'
-
   prod:
     image: danieled1/autozoommanager-server:latest
     volumes:
@@ -16,25 +11,6 @@ services:
     command: npm run start
     environment:
       NODE_ENV: production
-    depends_on:
-      - redis
-    restart: always
-
-  dev:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    volumes:
-      - .:/app
-      # - /app/node_modules
-    ports:
-      - '8081:8081'
-    command: npm run dev
-    environment:
-      NODE_ENV: development
-    depends_on:
-      - redis
     restart: always
 
   client:
@@ -42,3 +18,17 @@ services:
     ports:
       - '8001:8000'
     user: '1000:1000' # Add this line to set the user and group permissions
+  # dev:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     target: dev
+  #   volumes:
+  #     - .:/app
+  #     # - /app/node_modules
+  #   ports:
+  #     - '8081:8081'
+  #   command: npm run dev
+  #   environment:
+  #     NODE_ENV: development
+  #   restart: always

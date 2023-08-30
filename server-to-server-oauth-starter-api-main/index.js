@@ -1,39 +1,29 @@
+// const redis = require("./configs/redis");
 require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { debug } = require("node:console");
-const redis = require("./configs/redis");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
-
+const TokenModel = require('./models/TokenModel')
+let currentAccessToken = null; // Variable to hold the current access_token
 const app = express();
 
-/**
- * Default connection to redis - port 6379
- */
-(async () => {
-  await redis.connect();
-})();
-
-redis.on("connect", (err) => {
-  if (err) {
-    console.log("Could not establish connection with redis");
-  } else {
-    console.log("Connected to redis successfully");
-  }
-});
+// Connect to MongoDB
 connectDB();
 app.use(cookieParser());
 
 app.use(
   cors({
     origin: [
+      "https://zoom-generator-frontend.vercel.app",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
       "http://localhost:8080",
+      "*",
     ],
   })
 );
@@ -41,6 +31,16 @@ app.use(
 app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
+
+const updateCurrentAccessToken = async () => {
+  // Fetch the most recent token from MongoDB
+  const tokenData = await TokenModel.findOne().sort({ expires_in: -1 });
+  if (tokenData) {
+    currentAccessToken = tokenData.access_token;
+  }
+};
+updateCurrentAccessToken();
+
 /**
  * Add API Routes w/ tokenCheck middleware
  */
@@ -72,21 +72,23 @@ app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
  *    DELETE  /api/meetings/:meetingId/recordings --> delete meeting recordings -
  */
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 const server = app.listen(PORT, () =>
   console.log(`Listening on port ${[PORT]}!`)
 );
 
 /**
- * Graceful shutdown, removes access_token from redis
+ * Graceful shutdown, removes access_token from mongo
  */
 const cleanup = async () => {
   debug("\nClosing HTTP server");
-  await redis.del("access_token");
+  if (currentAccessToken) {
+    await TokenModel.deleteOne({ access_token: currentAccessToken });
+  }
   server.close(() => {
     debug("\nHTTP server closed");
-    redis.quit(() => process.exit());
+    process.exit();
   });
 };
 
