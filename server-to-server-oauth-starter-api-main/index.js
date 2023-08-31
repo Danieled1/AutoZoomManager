@@ -61,7 +61,7 @@ updateCurrentAccessToken();
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
-app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
+app.use("/api/webhooks", require("./routes/api/webhooks"));
 app.get("/", (req, res) => {
   res.status(200).send("Backend API is running");
 });
