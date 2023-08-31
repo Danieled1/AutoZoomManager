@@ -31,8 +31,8 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      // "https://zoom-generator-frontend.vercel.app",
-      // "https://zoom-generator-backend.vercel.app",
+      "https://zoom-generator-backend-9b73668fa08e.herokuapp.com",
+      "https://zoom-generator-frontend-6acfe2abb78d.herokuapp.com",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
