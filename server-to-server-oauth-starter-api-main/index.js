@@ -11,7 +11,20 @@ const TokenModel = require('./models/TokenModel')
 let currentAccessToken = null; // Variable to hold the current access_token
 const app = express();
 
-// Connect to MongoDB
+/**
+  Default connection to redis - port 6379
+ */
+(async () => {
+  await redis.connect();
+})();
+
+redis.on("connect", (err) => {
+  if (err) {
+    console.log("Could not establish connection with redis");
+  } else {
+    console.log("Connected to redis successfully");
+  }
+});
 connectDB();
 app.use(cookieParser());
 
