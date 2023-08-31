@@ -14,7 +14,7 @@ import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
 const localDev = "production";
-const environment = localDev 
+const environment = localDev;
 const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
@@ -165,7 +165,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         topic: `${teacherName} - ${courseName} - ${moment().format(
           "DD/MM/YYYY"
         )}`,
-        duration: 420, // Meeting duration in minutes
+        duration: 1, // Meeting duration in minutes
         settings: {
           password: "",
         },

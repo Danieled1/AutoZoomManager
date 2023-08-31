@@ -8,7 +8,7 @@ router.post("/meeting-ended", async (req, res) => {
   if (zoomToken !== process.env.ZOOM_VERIFICATION_TOKEN) {
     return res.status(401).send("Unauthorized request");
   }
-
+  console.log(req.body);
   const { payload } = req.body;
   const meetingId = payload.object.id;
 
