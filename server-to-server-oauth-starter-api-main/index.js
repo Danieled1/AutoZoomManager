@@ -18,13 +18,13 @@ const app = express();
   await redis.connect();
 })();
 
-redis.on("connect", (err) => {
-  if (err) {
-    console.log("Could not establish connection with redis");
-  } else {
-    console.log("Connected to redis successfully");
-  }
-});
+// redis.on("connect", (err) => {
+//   if (err) {
+//     console.log("Could not establish connection with redis");
+//   } else {
+//     console.log("Connected to redis successfully");
+//   }
+// });
 connectDB();
 app.use(cookieParser());
 
