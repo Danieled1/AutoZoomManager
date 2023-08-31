@@ -56,13 +56,15 @@ const updateCurrentAccessToken = async () => {
 updateCurrentAccessToken();
 
 /**
- * Add API Routes w/ tokenCheck middleware
+  Add API Routes w/ tokenCheck middleware
  */
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
 app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
-
+app.get("/", (req, res) => {
+  res.status(200).send("Backend API is running");
+});
 /**
  *    API Route Breakdown:
  *    __Users__
