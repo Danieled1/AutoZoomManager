@@ -14,9 +14,9 @@ const app = express();
 /**
   Default connection to redis - port 6379
  */
-(async () => {
-  await redis.connect();
-})();
+// (async () => {
+//   await redis.connect();
+// })();
 
 // redis.on("connect", (err) => {
 //   if (err) {
