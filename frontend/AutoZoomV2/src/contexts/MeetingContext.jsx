@@ -165,7 +165,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         topic: `${teacherName} - ${courseName} - ${moment().format(
           "DD/MM/YYYY"
         )}`,
-        duration: 1, // Meeting duration in minutes
+        duration: 420, // Meeting duration in minutes
         settings: {
           password: "",
         },
