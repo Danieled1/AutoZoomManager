@@ -86,7 +86,7 @@ app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
  *    DELETE  /api/meetings/:meetingId/recordings --> delete meeting recordings -
  */
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 const server = app.listen(PORT, () =>
   console.log(`Listening on port ${[PORT]}!`)
