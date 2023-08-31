@@ -1,1 +1,1 @@
-web: npm run start --prefix server-to-server-oauth-starter-api-main
+web: npm run start
