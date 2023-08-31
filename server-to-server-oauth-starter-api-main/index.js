@@ -32,12 +32,12 @@ app.use(
   cors({
     origin: [
       // "https://zoom-generator-backend-9b73668fa08e.herokuapp.com",
+      "*",
       "https://zoom-generator-frontend-6acfe2abb78d.herokuapp.com",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
       "http://localhost:8080",
-      "*",
     ],
   })
 );
@@ -61,7 +61,7 @@ updateCurrentAccessToken();
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
-app.use("/api/webhooks",tokenCheck ,require("./routes/api/webhooks"));
+app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
 app.get("/", (req, res) => {
   res.status(200).send("Backend API is running");
 });

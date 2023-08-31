@@ -93,17 +93,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
     setIsLoading(false);
   };
-  useEffect(() => {
-    fetchLiveMeetings(); // Fetch immediately when component mounts
-
-    const intervalId = setInterval(() => {
-      console.time("Fetched live meetings time");
-      fetchLiveMeetings(); // Fetch every 5 minutes
-      console.timeEnd("Fetched live meetings time");
-    }, 300000);
-
-    return () => clearInterval(intervalId); // Clear interval when component unmounts
-  }, []);
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
     if (topic && join_url) {
