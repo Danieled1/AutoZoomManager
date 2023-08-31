@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const { debug } = require("node:console");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
-const TokenModel = require('./models/TokenModel')
+const TokenModel = require("./models/TokenModel");
 let currentAccessToken = null; // Variable to hold the current access_token
 const app = express();
 
@@ -31,8 +31,8 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: [
-      "https://zoom-generator-frontend.vercel.app",
-      "https://zoom-generator-backend.vercel.app",
+      // "https://zoom-generator-frontend.vercel.app",
+      // "https://zoom-generator-backend.vercel.app",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
