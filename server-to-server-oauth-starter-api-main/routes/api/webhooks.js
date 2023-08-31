@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.post("/meeting-ended", async (req, res) => {
   const zoomToken = req.headerConfig; // This is a hypothetical header. Check Zoom's documentation for the exact header name.
-  console.log(zoomToken);
+  console.log('\n\n',zoomToken,'ZOOM-TOKEN\n\n');
   // // Verify the token
   // if (zoomToken !== process.env.ZOOM_VERIFICATION_TOKEN) {
   //   return res.status(401).send("Unauthorized request");
