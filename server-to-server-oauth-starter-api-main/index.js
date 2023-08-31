@@ -11,7 +11,7 @@ const connectDB = require("./configs/mongo");
 const app = express();
 
 /**
- * Default connection to redis - port 6379
+  Default connection to redis - port 6379
  */
 (async () => {
   await redis.connect();
