@@ -52,7 +52,7 @@ router.post("/:userId", async (req, res) => {
     );
     const zoomUser = await ZoomUser.findOne({ zoomAccountId: userId });
     if (zoomUser) {
-      zoomUser.sessions += 1;
+      zoomUser.sessions += 1
       await zoomUser.save();
     }
     const date = new Date(); // Current date
