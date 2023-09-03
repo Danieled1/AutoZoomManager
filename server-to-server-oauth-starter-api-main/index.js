@@ -12,8 +12,8 @@ const tokenState = require("./utils/tokenRefresher"); // Assuming tokenRefresher
 
 const app = express();
 
-tokenState.initialize();
 connectDB();
+tokenState.initialize();
 
 app.use(cookieParser());
 
