@@ -8,25 +8,13 @@ const { debug } = require("node:console");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
 const TokenModel = require("./models/TokenModel");
-const startTokenRefreshLoop = require("./utils/tokenRefresher");
-let currentAccessToken = null; // Variable to hold the current access_token
+const tokenState = require("./utils/tokenRefresher"); // Assuming tokenRefresher is the new module
+
 const app = express();
 
-/**
-  Default connection to redis - port 6379
- */
-// (async () => {
-//   await redis.connect();
-// })();
-
-// redis.on("connect", (err) => {
-//   if (err) {
-//     console.log("Could not establish connection with redis");
-//   } else {
-//     console.log("Connected to redis successfully");
-//   }
-// });
+tokenState.initialize();
 connectDB();
+
 app.use(cookieParser());
 
 app.use(
@@ -91,6 +79,7 @@ const server = app.listen(PORT, () =>
  */
 const cleanup = async () => {
   debug("\nClosing HTTP server");
+  const currentAccessToken = tokenState.getAccessToken();
   if (currentAccessToken) {
     await TokenModel.deleteOne({ access_token: currentAccessToken });
   }

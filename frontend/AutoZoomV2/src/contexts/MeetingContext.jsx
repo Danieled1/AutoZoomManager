@@ -121,7 +121,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       // Fetch eligible users from the server
       const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
       const eligibleUsers = response.data.eligibleZoomUsers;
-      console.log(eligibleUsers, "eligibleUsers");
       if (!eligibleUsers || eligibleUsers.length === 0) {
         displayErrorToast(
           "No Eligible Users.",
@@ -134,7 +133,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       const randomIndex = Math.floor(Math.random() * eligibleUsers.length);
       const selectedUser = eligibleUsers[randomIndex];
       const selectedUserId = selectedUser.zoomAccountId;
-      console.log(selectedUserId, "userid");
 
       return { selectedUser, selectedUserId };
     } catch (err) {
@@ -147,14 +145,13 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   }, []);
 
   const createMeetingRequest = async (selectedUserId) => {
-    console.log(selectedUserId, "SELECTED in createMeetingRequest");
     const response = await axios.post(
       `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
         topic: `${teacherName} - ${courseName} - ${moment().format(
           "DD/MM/YYYY"
         )}`,
-        duration: 1, // Meeting duration in minutes
+        duration: 420, // Meeting duration in minutes
         settings: {
           password: "",
         },
@@ -228,7 +225,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
 
     const { selectedUser, selectedUserId } = await selectRandomUser();
-    console.log(selectedUser, "selectedUser");
     if (!selectedUser) {
       displayErrorToast(
         "No Eligible Users.",
