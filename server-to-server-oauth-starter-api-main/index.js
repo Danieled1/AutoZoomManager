@@ -34,7 +34,6 @@ app.use(
 app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
-startTokenRefreshLoop();
 /**
   Add API Routes w/ tokenCheck middleware
  */
