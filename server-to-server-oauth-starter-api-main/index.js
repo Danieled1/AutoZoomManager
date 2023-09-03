@@ -8,6 +8,7 @@ const { debug } = require("node:console");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
 const TokenModel = require("./models/TokenModel");
+const startTokenRefreshLoop = require("./utils/tokenRefresher");
 let currentAccessToken = null; // Variable to hold the current access_token
 const app = express();
 
@@ -45,16 +46,7 @@ app.use(
 app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
-
-const updateCurrentAccessToken = async () => {
-  // Fetch the most recent token from MongoDB
-  const tokenData = await TokenModel.findOne().sort({ expires_in: -1 });
-  if (tokenData) {
-    currentAccessToken = tokenData.access_token;
-  }
-};
-updateCurrentAccessToken();
-
+startTokenRefreshLoop();
 /**
   Add API Routes w/ tokenCheck middleware
  */
