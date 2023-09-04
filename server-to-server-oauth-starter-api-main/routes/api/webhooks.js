@@ -67,7 +67,12 @@ router.post("/meeting-ended", async (req, res) => {
         }
 
         // Respond to Zoom
-        res.status(200).json({ status: "Successfully processed webhook" });
+        response = {
+          message: "Successfully processed webhook",
+          status: 200,
+        };
+        res.status(response.status);
+        res.json(response);
       } else {
         console.log("Authorized request to Zoom Webhook not validation");
         response = {
