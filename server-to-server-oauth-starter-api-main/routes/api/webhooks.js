@@ -1,22 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
+const { log } = require("console");
 router.post("/meeting-ended", async (req, res) => {
   const { event, payload, event_ts } = req.body;
-
-  // For Challenge-Response Check (CRC)
-  if (event === "endpoint.url_validation") {
-    const hashForValidate = crypto
-      .createHmac("sha256", process.env.ZOOM_WEBHOOK_SECRET_TOKEN)
-      .update(payload.plainToken)
-      .digest("hex");
-
-    return res.status(200).json({
-      plainToken: payload.plainToken,
-      encryptedToken: hashForValidate,
-    });
-  }
-
   // For HMAC SHA-256 Hashing
   const message = `v0:${req.headers["x-zm-request-timestamp"]}:${JSON.stringify(
     req.body
@@ -31,18 +18,22 @@ router.post("/meeting-ended", async (req, res) => {
   if (req.headers["x-zm-signature"] !== signature) {
     return res.status(401).send("Unauthorized request");
   }
-
-  // Your existing logic here
-  let meetingId;
-  if (payload && payload.object) {
-    meetingId = payload.object.id;
+  if(event === "endpoint.url_validation"){
+    const hashForValidate = crypto.createHmac('sha256', process.env.ZOOM_WEBHOOK_SECRET_TOKEN).update(payload.plainToken).digest('hex')
+    console.log(hashForValidate, "hashForValidate");
+    res.status(200).json({
+      message: {
+        plainToken: payload.plainToken,
+        encryptedToken: hashForValidate
+      }
+    });
+  } else {
+    res.status(401).json({
+      message: "Unauthorized request to Zoom Webhook",
+    });
   }
-  if (meetingId) {
-    // Find the user with this meeting ID and update their record.
-    // ...
-  }
 
-  res.status(200).send();
+  
 });
 
 module.exports = router;
