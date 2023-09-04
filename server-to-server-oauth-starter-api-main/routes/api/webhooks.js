@@ -3,6 +3,7 @@ const router = express.Router();
 const crypto = require("crypto");
 router.post("/meeting-ended", async (req, res) => {
   try {
+    let response;
     console.log("Received request body:", req.body);
     console.log("Received request headers:", req.headers);
 
@@ -24,34 +25,45 @@ router.post("/meeting-ended", async (req, res) => {
       .createHmac("sha256", process.env.ZOOM_SECRET_TOKEN)
       .update(message)
       .digest("hex");
+
     const signature = `v0=${hashForVerify}`;
 
     console.log("Expected Signature:", signature);
     console.log("Received Signature:", req.headers["x-zm-signature"]);
 
-    if (req.headers["x-zm-signature"] !== signature) {
-      console.log("Unauthorized request");
-      return res.status(401).send("Unauthorized request");
-    }
-
-    if (event === "endpoint.url_validation") {
-      const hashForValidate = crypto
-        .createHmac("sha256", process.env.ZOOM_SECRET_TOKEN)
-        .update(payload.plainToken)
-        .digest("hex");
-
-      return res.status(200).json({
-        message: {
-          plainToken: payload.plainToken,
-          encryptedToken: hashForValidate,
-        },
-      });
+    if (signature === req.headers["x-zm-signature"]) {
+      if (event === "endpoint.url_validation") {
+        const hashForValidate = crypto
+          .createHmac("sha256", process.env.ZOOM_SECRET_TOKEN)
+          .update(payload.plainToken)
+          .digest("hex");
+        response = {
+          message: {
+            plainToken: payload.plainToken,
+            encryptedToken: hashForValidate,
+          },
+          status: 200,
+        };
+        console.log("Challange response:", response.message);
+        res.status(response.status);
+        res.json(response.message);
+      } else {
+        console.log("Authorized request to Zoom Webhook not validation");
+        response = {
+          message: "Authorized request to Zoom Webhook not validation",
+          status: 200,
+        };
+        res.status(response.status);
+        res.json(response);
+      }
     } else {
-      // Handle other events
-      console.log("Unauthorized request to Zoom Webhook");
-      return res.status(401).json({
-        message: "Unauthorized request to Zoom Webhook",
-      });
+      console.log("Unauthorized request to Zoom Webhook not equal");
+      response = {
+        message: "Unauthorized request to Zoom Webhook not equal sign",
+        status: 200,
+      };
+      res.status(response.status);
+      res.json(response);
     }
   } catch (error) {
     console.error("An error occurred:", error);
