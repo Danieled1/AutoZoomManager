@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 router.post("/meeting-ended", async (req, res) => {
+  if (!process.env.ZOOM_SECRET_TOKEN) {
+    return res.status(500).send("Server configuration error: ZOOM_WEBHOOK_SECRET_TOKEN not set.");
+  }
   const { event, payload } = req.body;
   // For HMAC SHA-256 Hashing
   const message = `v0:${req.headers["x-zm-request-timestamp"]}:${JSON.stringify(
