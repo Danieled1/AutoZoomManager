@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
-const { log } = require("console");
 router.post("/meeting-ended", async (req, res) => {
   const { event, payload, event_ts } = req.body;
   // For HMAC SHA-256 Hashing
   const message = `v0:${req.headers["x-zm-request-timestamp"]}:${JSON.stringify(
     req.body
   )}`;
+  console.log( process.env.ZOOM_WEBHOOK_SECRET_TOKEN);
   const hashForVerify = crypto
     .createHmac("sha256", process.env.ZOOM_WEBHOOK_SECRET_TOKEN)
     .update(message)
