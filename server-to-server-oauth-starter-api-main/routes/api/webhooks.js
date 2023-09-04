@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
+const ZoomUser = require("../../models/ZoomUser");
+
 router.post("/meeting-ended", async (req, res) => {
   try {
     let response;
@@ -47,6 +49,24 @@ router.post("/meeting-ended", async (req, res) => {
         console.log("Challange response:", response.message);
         res.status(response.status);
         res.json(response.message);
+      } else if (event === "meeting.ended") {
+        const hostId = req.body.payload.account_id; // Extracting the host ID
+        console.log(hostId,"HOST ID");
+        // Find the user by their Zoom Account ID and decrement sessions
+        const user = await ZoomUser.findOneAndUpdate(
+          { zoomAccountId: hostId },
+          { $inc: { sessions: -1 } },
+          { new: true } // This option returns the modified document
+        );
+        console.log(user,"ZoomUser");
+        if (user) {
+          console.log("Successfully updated user:", user.name);
+        } else {
+          console.log("User not found:", hostId);
+        }
+
+        // Respond to Zoom
+        res.status(200).json({ status: "Successfully processed webhook" });
       } else {
         console.log("Authorized request to Zoom Webhook not validation");
         response = {
