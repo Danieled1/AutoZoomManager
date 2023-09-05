@@ -51,8 +51,8 @@ router.post("/meeting-ended", async (req, res) => {
         res.json(response.message);
       } else if (event === "meeting.ended") {
         console.log(event, "EVENT");
-        console.log(req.body.payload, "req.body.payload");
-        const { host_id } = req.body.paylod.object; // Extracting the host ID
+
+        const host_id = req.body.paylod.object.host_id; // Extracting the host ID
         // Find the user by their Zoom Account ID and decrement sessions
         const user = await ZoomUser.findOneAndUpdate(
           { zoomAccountId: host_id },
