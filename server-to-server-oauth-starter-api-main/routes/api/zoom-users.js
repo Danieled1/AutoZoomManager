@@ -32,6 +32,18 @@ router.post("/add", async (req, res) => {
   }
 });
 
+router.get('/', async (req, res) => {
+  try {
+    const zoomUsers = await ZoomUser.find();s
+    return res.status(201).send({ success: true, ZoomUsers: zoomUsers });
+  } catch (err) {
+    return res.status(500).json({
+      message: `Error with getting the zoom-user`,
+      error: err.message,
+    });
+  }
+})
+
 router.get("/:id", async (req, res) => {
   // The id of the document not the zoomAccountId
   const { id } = req.params;

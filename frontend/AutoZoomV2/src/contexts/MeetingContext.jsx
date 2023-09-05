@@ -9,15 +9,9 @@ import {
   useState,
 } from "react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
-import productionConfig from "../config/config.production";
-import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const localDev = "production";
-const environment = localDev;
-const config =
-  environment === "production" ? productionConfig : developmentConfig;
-const { apiBaseUrl } = config;
+const apiBaseUrl = process.env.API_BASE_URL;
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -39,15 +33,41 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
-  const [usersMap, setUsersMap] = useState(() => {
-    return shuffledUsers.reduce((map, user, index) => {
-      const userId = `user${index + 1}`;
-      return {
-        ...map,
-        [userId]: { ...user, sessions: 0, meetingIds: [], currentTeacher: "" },
-      };
-    }, {});
-  });
+  const [usersMap, setUsersMap] = useState([]);
+  const [canCreateMeeting, setCanCreateMeeting] = useState(true);
+  // get all users
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${apiBaseUrl}/api/zoom-users/`) // replace with your endpoint
+      .then((response) => {
+        const fetchedUsers = response.data.eligibleZoomUsers;
+        const shuffledUsers = shuffle(fetchedUsers);
+        setUsers(shuffledUsers);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+  // For disabling create meeting when there is no users
+  useEffect(() => {
+    setIsLoading(true);
+
+    axios
+      .get(`${apiBaseUrl}/api/zoom-users/eligible`) // replace with your endpoint
+      .then((response) => {
+        setCanCreateMeeting(response.data.eligibleZoomUsers.length > 0);
+      })
+      .catch((error) => {
+        console.error("Error checking meeting eligibility:", error);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
   const getUserLiveMeetings = async (userId) => {
     try {
       const today = new Date();
@@ -291,6 +311,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         fetchLiveMeetings,
         liveMeetings,
         areUsersAvailable,
+
+        canCreateMeeting,
       }}
     >
       {/* Users Occupation Box */}

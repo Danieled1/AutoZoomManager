@@ -6,9 +6,6 @@ const ZoomUser = require("../../models/ZoomUser");
 router.post("/meeting-ended", async (req, res) => {
   try {
     let response;
-    console.log("Received request body:", req.body);
-    console.log("Received request headers:", req.headers);
-
     if (!process.env.ZOOM_SECRET_TOKEN) {
       console.log(
         "Server configuration error: ZOOM_WEBHOOK_SECRET_TOKEN not set."
@@ -30,9 +27,6 @@ router.post("/meeting-ended", async (req, res) => {
 
     const signature = `v0=${hashForVerify}`;
 
-    console.log("Expected Signature:", signature);
-    console.log("Received Signature:", req.headers["x-zm-signature"]);
-
     if (signature === req.headers["x-zm-signature"]) {
       if (event === "endpoint.url_validation") {
         const hashForValidate = crypto
@@ -46,26 +40,23 @@ router.post("/meeting-ended", async (req, res) => {
           },
           status: 200,
         };
-        console.log("Challange response:", response.message);
         res.status(response.status);
         res.json(response.message);
       } else if (event === "meeting.ended") {
         console.log(event, "EVENT");
 
-        const host_id = req.body.payload.object.host_id; // Extracting the host ID
+        const host_id = req.body.payload.object.host_id; 
         // Find the user by their Zoom Account ID and decrement sessions
         const user = await ZoomUser.findOneAndUpdate(
           { zoomAccountId: host_id },
           { $inc: { sessions: -1 } },
           { new: true } // This option returns the modified document
         );
-        console.log(user, "ZoomUser");
         if (user) {
           console.log("Successfully updated user:", user.name);
         } else {
           console.log("User not found:", host_id);
         }
-
         // Respond to Zoom
         response = {
           message: "Successfully processed webhook",
@@ -92,7 +83,6 @@ router.post("/meeting-ended", async (req, res) => {
       res.json(response);
     }
   } catch (error) {
-    console.error("An error occurred:", error);
     res.status(500).send("Internal Server Error");
   }
 });
