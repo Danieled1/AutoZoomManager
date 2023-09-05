@@ -1,6 +1,4 @@
-// const redis = require("./configs/redis");
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -8,7 +6,7 @@ const { debug } = require("node:console");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
 const TokenModel = require("./models/TokenModel");
-const tokenState = require("./utils/tokenRefresher"); // Assuming tokenRefresher is the new module
+const tokenState = require("./utils/tokenRefresher"); 
 
 const app = express();
 
@@ -34,9 +32,7 @@ app.use(
 app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
-/**
-  Add API Routes w/ tokenCheck middleware
- */
+
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));

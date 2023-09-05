@@ -50,20 +50,20 @@ router.post("/meeting-ended", async (req, res) => {
         res.status(response.status);
         res.json(response.message);
       } else if (event === "meeting.ended") {
-        console.log(event,"EVENT");
-        const hostId = req.body.payload.account_id; // Extracting the host ID
-        console.log(hostId,"HOST ID");
+        console.log(event, "EVENT");
+        const { host_id } = req.body.object.host_id; // Extracting the host ID
+        console.log(host_id, "HOST ID");
         // Find the user by their Zoom Account ID and decrement sessions
         const user = await ZoomUser.findOneAndUpdate(
-          { zoomAccountId: hostId },
+          { zoomAccountId: host_id },
           { $inc: { sessions: -1 } },
           { new: true } // This option returns the modified document
         );
-        console.log(user,"ZoomUser");
+        console.log(user, "ZoomUser");
         if (user) {
           console.log("Successfully updated user:", user.name);
         } else {
-          console.log("User not found:", hostId);
+          console.log("User not found:", host_id);
         }
 
         // Respond to Zoom

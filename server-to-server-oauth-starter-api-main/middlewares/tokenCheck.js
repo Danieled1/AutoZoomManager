@@ -1,16 +1,14 @@
-// const redis = require("../configs/redis");
 const { getToken, setToken } = require("../utils/token");
 const TokenModel = require("../models/TokenModel");
 
 /**
- * Middleware that checks if a valid (not expired) token exists in redis
- * If invalid or expired, generate a new token, set in redis, and append to http request
+ * Middleware that checks if a valid (not expired) token exists in token's collection
+ * If invalid or expired, generate a new token, set in token, and append to http request
  */
 const tokenCheck = async (req, res, next) => {
   let tokenData = await TokenModel.findOne().sort({ expires_in: -1 });
   const currentTime = new Date();
 
-  // Check if token exists and is not expired
   if (!tokenData || new Date(tokenData.expires_in) <= currentTime) {
     const { access_token, expires_in, error } = await getToken();
 

@@ -1,9 +1,3 @@
-/**
- * @param {*} error object
- * @param {*} res http response
- * @param {*} customMessage error message provided by route
- * @returns error status with message
- */
 const errorHandler = (error, res, customMessage = 'Error') => {
   if (!res) return null;
   const { status, data } = error?.response || {};

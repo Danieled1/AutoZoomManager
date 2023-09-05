@@ -233,6 +233,7 @@ router.get("/:userId/recordings", async (req, res) => {
     );
   }
 });
+// Not working, attempt of handling download and compress recordings into zip
 router.post("/proxy-download", async (req, res) => {
   console.log("test");
   // const { downloadUrl, topic } = req.body;

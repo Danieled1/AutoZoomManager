@@ -1,6 +1,4 @@
 const express = require("express");
-const qs = require("query-string");
-const errorHandler = require("../../utils/errorHandler");
 const ZoomUser = require("../../models/ZoomUser");
 
 const router = express.Router();
@@ -8,11 +6,11 @@ router.get("/eligible", async (req, res) => {
   try {
     const eligibleZoomUsers = await ZoomUser.find({ sessions: { $lt: 2 } });
     if (!eligibleZoomUsers || eligibleZoomUsers.length === 0) {
-      return res.status(204).json({ message: "No free users left to open a meeting with." });
+      return res
+        .status(204)
+        .json({ message: "No free users left to open a meeting with." });
     }
-    return res
-      .status(200)
-      .send({ eligibleZoomUsers });
+    return res.status(200).send({ eligibleZoomUsers });
   } catch (err) {
     return res
       .status(500)
@@ -22,8 +20,6 @@ router.get("/eligible", async (req, res) => {
 
 router.post("/add", async (req, res) => {
   const { body } = req;
-  console.log(body);
-
   const newZoomUser = new ZoomUser(body);
   try {
     await newZoomUser.save();
@@ -57,14 +53,12 @@ router.patch("/:id", async (req, res) => {
   // The id of the document not the zoomAccountId
   const { id } = req.params;
   const { body } = req;
-
   try {
     const zoomUser = await ZoomUser.findById(id);
 
     if (!zoomUser) {
       return res.status(404).json({ message: "User not found." });
     }
-
     Object.assign(zoomUser, body);
 
     await zoomUser.save();
