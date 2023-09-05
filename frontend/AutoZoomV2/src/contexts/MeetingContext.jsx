@@ -33,41 +33,15 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
-  const [usersMap, setUsersMap] = useState([]);
-  const [canCreateMeeting, setCanCreateMeeting] = useState(true);
-  // get all users
-  useEffect(() => {
-    setIsLoading(true);
-    axios
-      .get(`${apiBaseUrl}/api/zoom-users/`) // replace with your endpoint
-      .then((response) => {
-        const fetchedUsers = response.data.eligibleZoomUsers;
-        const shuffledUsers = shuffle(fetchedUsers);
-        setUsersMap(shuffledUsers);
-      })
-      .catch((error) => {
-        console.error("Error fetching users:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-  // For disabling create meeting when there is no users
-  useEffect(() => {
-    setIsLoading(true);
-
-    axios
-      .get(`${apiBaseUrl}/api/zoom-users/eligible`) // replace with your endpoint
-      .then((response) => {
-        setCanCreateMeeting(response.data.eligibleZoomUsers);
-      })
-      .catch((error) => {
-        console.error("Error checking meeting eligibility:", error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+  const [usersMap, setUsersMap] = useState(() => {
+    return shuffledUsers.reduce((map, user, index) => {
+      const userId = `user${index + 1}`;
+      return {
+        ...map,
+        [userId]: { ...user, sessions: 0, meetingIds: [], currentTeacher: "" },
+      };
+    }, {});
+  });
   const getUserLiveMeetings = async (userId) => {
     try {
       const today = new Date();
@@ -141,7 +115,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       // Fetch eligible users from the server
       const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
       const eligibleUsers = response.data.eligibleZoomUsers;
-      if (!eligibleUsers) {
+      if (!eligibleUsers || eligibleUsers.length === 0) {
         displayErrorToast(
           "No Eligible Users.",
           "There are no eligible users left to create a meeting."
@@ -311,8 +285,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         fetchLiveMeetings,
         liveMeetings,
         areUsersAvailable,
-
-        canCreateMeeting,
       }}
     >
       {/* Users Occupation Box */}
