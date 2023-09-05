@@ -9,9 +9,15 @@ import {
   useState,
 } from "react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
+import productionConfig from "../config/config.production";
+import developmentConfig from "../config/config.development";
 
 const MeetingContext = createContext();
-const apiBaseUrl = process.env.API_BASE_URL;
+const localDev = "production";
+const environment = localDev;
+const config =
+  environment === "production" ? productionConfig : developmentConfig;
+const { apiBaseUrl } = config;
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
