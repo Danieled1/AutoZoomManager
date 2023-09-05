@@ -59,7 +59,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     axios
       .get(`${apiBaseUrl}/api/zoom-users/eligible`) // replace with your endpoint
       .then((response) => {
-        setCanCreateMeeting(response.data.eligibleZoomUsers.length > 0);
+        setCanCreateMeeting(response.data.eligibleZoomUsers);
       })
       .catch((error) => {
         console.error("Error checking meeting eligibility:", error);
