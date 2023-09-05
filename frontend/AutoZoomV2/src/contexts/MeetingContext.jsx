@@ -43,7 +43,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       .then((response) => {
         const fetchedUsers = response.data.eligibleZoomUsers;
         const shuffledUsers = shuffle(fetchedUsers);
-        setUsers(shuffledUsers);
+        setUsersMap(shuffledUsers);
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
