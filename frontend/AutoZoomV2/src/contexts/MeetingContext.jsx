@@ -141,7 +141,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       // Fetch eligible users from the server
       const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
       const eligibleUsers = response.data.eligibleZoomUsers;
-      if (!eligibleUsers || eligibleUsers.length === 0) {
+      if (!eligibleUsers) {
         displayErrorToast(
           "No Eligible Users.",
           "There are no eligible users left to create a meeting."
