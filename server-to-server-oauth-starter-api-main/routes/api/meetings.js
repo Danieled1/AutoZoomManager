@@ -49,21 +49,21 @@ router.post("/:userId", async (req, res) => {
       meetingData,
       headerConfig
     );
-    const zoomUser = await ZoomUser.findOne({ zoomAccountId: userId });
-    if (zoomUser) {
-      zoomUser.sessions += 1
-      await zoomUser.save();
-    }
-    const date = new Date(); // Current date
-    date.setMinutes(date.getMinutes() + duration); // Add the meeting duration in minutes
+    // const zoomUser = await ZoomUser.findOne({ zoomAccountId: userId });
+    // if (zoomUser) {
+    //   zoomUser.sessions += 1
+    //   await zoomUser.save();
+    // }
+    // const date = new Date(); // Current date
+    // date.setMinutes(date.getMinutes() + duration); // Add the meeting duration in minutes
 
-    schedule.scheduleJob(date, async function() {
-      const userToUpdate = await ZoomUser.findOne({ zoomAccountId: userId });
-      if (userToUpdate && userToUpdate.sessions > 0) {
-        userToUpdate.sessions -= 1;
-        await userToUpdate.save();
-      }
-    });
+    // schedule.scheduleJob(date, async function() {
+    //   const userToUpdate = await ZoomUser.findOne({ zoomAccountId: userId });
+    //   if (userToUpdate && userToUpdate.sessions > 0) {
+    //     userToUpdate.sessions -= 1;
+    //     await userToUpdate.save();
+    //   }
+    // });
 
     return res.json(request.data);
   } catch (err) {
