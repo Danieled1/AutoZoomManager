@@ -119,28 +119,43 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
   const validateInputs = () => {
     if (!teacherName || !courseName) {
-      return false;
+      return "Even AI can't guess your name or course. 🤖";
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
     if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
-      return false;
+      return "Your input is longer than my last code review. 📚";
     }
     if (
       typeof sanitizedTeacherName !== "string" ||
       typeof sanitizedCourseName !== "string"
     ) {
-      return false;
+      return "Your input type is more confusing than JavaScript's type coercion. 🤨";
     }
     if (!sanitizedTeacherName || !sanitizedCourseName) {
-      return false;
+      return "Empty strings? Even a QA tester would enter something. 😏";
     }
     const whitelistPattern = /^[a-zA-Z0-9 _.,!"'/$]+$/;
     if (
       !whitelistPattern.test(sanitizedTeacherName) ||
       !whitelistPattern.test(sanitizedCourseName)
     ) {
-      return false;
+      if (courseName.toLowerCase().includes("cyber")) {
+        return "Nice try, Cyber Teacher. But your SQL injection won't work here. 🕵️‍♂️";
+      }
+      if (courseName.toLowerCase().includes("qa")) {
+        return "A for effort, QA Teacher. But no bugs found here! 🐞";
+      }
+      if (courseName.toLowerCase().includes("full stack")) {
+        return "FullStack? You must be good at balancing things, but this input just tipped the scales! 🤹‍♂️";
+      }
+      if (courseName.toLowerCase().includes("ai")) {
+        return "Even AI can't crack this validation, nice try! 🤖";
+      }
+      if (courseName.toLowerCase().includes("data&digital")) {
+        return "Data&Digital? Your input is like a corrupt database—unusable! 🗃️";
+      }
+      return "Nice try, but you can't bypass this validation. 🚫";
     }
 
     return true;
