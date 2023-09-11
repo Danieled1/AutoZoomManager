@@ -260,11 +260,9 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
 
   const createMeeting = async () => {
-    if (!validateInputs()) {
-      displayErrorToast(
-        "Data Required.",
-        "Please fill in your name and course name."
-      );
+    const validationMessage = validateInputs();
+    if (validationMessage !== true) {
+      displayErrorToast("Validation Failed", validationMessage);
       return;
     }
 
