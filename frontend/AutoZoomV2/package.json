@@ -26,6 +26,7 @@
     "react-select": "^5.7.4",
     "react-share": "^4.4.1",
     "serve": "^14.2.1",
+    "validator": "^13.11.0",
     "watchpack": "^2.4.0",
     "webpack": "^5.88.2"
   },
