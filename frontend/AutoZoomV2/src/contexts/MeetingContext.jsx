@@ -1,4 +1,4 @@
-import React, { useToast, useClipboard } from "@chakra-ui/react";
+import { useToast, useClipboard } from "@chakra-ui/react";
 import axios from "axios";
 import moment from "moment";
 import {
@@ -8,13 +8,11 @@ import {
   useEffect,
   useState,
 } from "react";
+import { DownloadRecordingsModal, UsersModal } from "../components";
 import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
 import escape from "validator/lib/escape";
-const DownloadRecordingsModal = React.lazy(() =>
-  import("../components/DownloadRecordingsModal")
-);
-const UsersModal = React.lazy(() => import("../components/UsersModal"));
+
 const MeetingContext = createContext();
 const localDev = "production";
 const environment = localDev;
@@ -31,6 +29,7 @@ function shuffle(array) {
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const shuffledUsers = shuffle([...initialUsersMap]);
   const [areUsersAvailable, setAreUsersAvailable] = useState(true);
+
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
@@ -39,7 +38,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [liveMeetings, setLiveMeetings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [usersMap, setUsersMap] = useState(() => {
