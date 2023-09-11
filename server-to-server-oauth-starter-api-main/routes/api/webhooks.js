@@ -50,7 +50,7 @@ router.post("/meeting-ended", async (req, res) => {
         const user = await ZoomUser.findOneAndUpdate(
           { zoomAccountId: host_id },
           { $inc: { sessions: +1 } },
-          { new: true } // This option returns the modified document
+          { new: true }
         );
         if (user) {
           console.log("Successfully updated user:", user.name);

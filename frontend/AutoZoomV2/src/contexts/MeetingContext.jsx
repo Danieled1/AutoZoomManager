@@ -11,6 +11,7 @@ import {
 import { DownloadRecordingsModal, UsersModal } from "../components";
 import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
+import validator from "validator";
 
 const MeetingContext = createContext();
 const localDev = "production";
@@ -108,17 +109,45 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const openRecordingsModal = () => setIsRecordingsModalOpen(true);
   const closeRecordingsModal = () => setIsRecordingsModalOpen(false);
 
+  const sanitizeInput = (input) => {
+    let sanitized = input
+      .replace(/<script.*?>.*?<\/script>/g, "")
+      .replace(/(['";])/g, "\\$1")
+      .trim();
+    sanitized = validator.escape(sanitized);
+    return sanitized;
+  };
   const validateInputs = () => {
     if (!teacherName || !courseName) {
       return false;
     }
+    const sanitizedTeacherName = sanitizeInput(teacherName);
+    const sanitizedCourseName = sanitizeInput(courseName);
+    if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
+      return false;
+    }
+    if (
+      typeof sanitizedTeacherName !== "string" ||
+      typeof sanitizedCourseName !== "string"
+    ) {
+      return false;
+    }
+    if (!sanitizedTeacherName || !sanitizedCourseName) {
+      return false;
+    }
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'/$]+$/;
+    if (
+      !whitelistPattern.test(sanitizedTeacherName) ||
+      !whitelistPattern.test(sanitizedCourseName)
+    ) {
+      return false;
+    }
+
     return true;
   };
 
-  // BUG = NOT PICKING USERS CORRECTLY ============================================================================
   const selectRandomUser = useCallback(async () => {
     try {
-      // Fetch eligible users from the server
       const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
       const eligibleUsers = response.data.eligibleZoomUsers;
       if (!eligibleUsers || eligibleUsers.length === 0) {
@@ -126,7 +155,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
           "No Eligible Users.",
           "There are no eligible users left to create a meeting."
         );
-        setAreUsersAvailable(false); // Update the state to reflect no users are available
+        setAreUsersAvailable(false);
         return null;
       }
 
