@@ -94,13 +94,15 @@ const DownloadRecordingsModal = ({
     );
 
   const headers = ["User", "Topic", "Date", "File Size", "Actions"];
-
+  const handleStartTime = (start_time) => {
+    return start_time.replace(/\//g, '.');
+  }
   const renderRow = (result, index) =>
     result.recordings.map((recording, recordingIndex) => (
       <Tr key={`${index}-${recordingIndex}`} className='row'>
         <Td>{result.user}</Td>
         <Td className='truncate'>{recording.topic}</Td>
-        <Td className='truncate'>{recording.start_time}</Td>
+        <Td className='truncate'>{handleStartTime(recording.start_time)}</Td>
         <Td>{formatBytes(recording.file_size)}</Td>
         <Td>
           <ButtonGroups
