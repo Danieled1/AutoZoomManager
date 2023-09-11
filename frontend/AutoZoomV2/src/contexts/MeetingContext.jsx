@@ -119,26 +119,26 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
   const validateInputs = () => {
     if (!teacherName && !courseName) {
-      return "Even AI can't guess your name or course. 🤖";
+      return "Missed inputs, even AI can't guess your name or course. 🤖";
     }
     if (teacherName.includes("<script>") || courseName.includes("<script>")) {
-      return "Nice try, but you can't bypass this validation. 🚫";
+      return " XSS protection. Nice try, but you can't bypass this validation. 🚫";
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
     if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
-      return "Your input is longer than my last code review. 📚";
+      return "Long input. Your input is longer than my last code review. 📚";
     }
     if (
       typeof sanitizedTeacherName !== "string" ||
       typeof sanitizedCourseName !== "string"
     ) {
-      return "Your input type is more confusing than JavaScript's type coercion. 🤨";
+      return "Wrong input type. Your input type is more confusing than JavaScript's type coercion. 🤨";
     }
     if (!sanitizedTeacherName || !sanitizedCourseName) {
-      return "Empty strings? Even a QA tester would enter something. 😏";
+      return "Empty inputs.Empty strings? Even a QA tester would enter something. 😏";
     }
-    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'/$]+$/;
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'/$\u0590-\u05FF]+$/;
     if (
       !whitelistPattern.test(sanitizedTeacherName) ||
       !whitelistPattern.test(sanitizedCourseName)
