@@ -118,7 +118,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     return sanitized;
   };
   const validateInputs = () => {
-    if (!teacherName || !courseName) {
+    if (!teacherName && !courseName) {
       return "Even AI can't guess your name or course. 🤖";
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
