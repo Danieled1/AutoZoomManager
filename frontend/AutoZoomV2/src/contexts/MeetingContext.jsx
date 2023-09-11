@@ -8,11 +8,13 @@ import {
   useEffect,
   useState,
 } from "react";
-import { DownloadRecordingsModal, UsersModal } from "../components";
 import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
-import validator from "validator";
-
+import escape from "validator/lib/escape";
+const DownloadRecordingsModal = React.lazy(() =>
+  import("../components/DownloadRecordingsModal")
+);
+const UsersModal = React.lazy(() => import("../components/UsersModal"));
 const MeetingContext = createContext();
 const localDev = "production";
 const environment = localDev;
@@ -29,7 +31,6 @@ function shuffle(array) {
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const shuffledUsers = shuffle([...initialUsersMap]);
   const [areUsersAvailable, setAreUsersAvailable] = useState(true);
-
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
@@ -38,6 +39,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [liveMeetings, setLiveMeetings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [usersMap, setUsersMap] = useState(() => {
@@ -114,12 +116,15 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       .replace(/<script.*?>.*?<\/script>/g, "")
       .replace(/(['";])/g, "\\$1")
       .trim();
-    sanitized = validator.escape(sanitized);
+    sanitized = escape(sanitized);
     return sanitized;
   };
   const validateInputs = () => {
     if (!teacherName && !courseName) {
       return "Even AI can't guess your name or course. 🤖";
+    }
+    if (teacherName.includes("<script>") || courseName.includes("<script>")) {
+      return "Nice try, but you can't bypass this validation. 🚫";
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
