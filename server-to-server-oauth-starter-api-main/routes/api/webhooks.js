@@ -42,6 +42,28 @@ router.post("/meeting-ended", async (req, res) => {
         };
         res.status(response.status);
         res.json(response.message);
+      } else if (event === "meeting.started") {
+        console.log("STARTED_EVENT", event);
+
+        const host_id = req.body.payload.object.host_id;
+        // Find the user by their Zoom Account ID and decrement sessions
+        const user = await ZoomUser.findOneAndUpdate(
+          { zoomAccountId: host_id },
+          { $inc: { sessions: +1 } },
+          { new: true } // This option returns the modified document
+        );
+        if (user) {
+          console.log("Successfully updated user:", user.name);
+        } else {
+          console.log("User not found:", host_id);
+        }
+        // Respond to Zoom
+        response = {
+          message: "Successfully processed webhook",
+          status: 200,
+        };
+        res.status(response.status);
+        res.json(response);
       } else if (event === "meeting.ended") {
         console.log("ENDED_EVENT", event);
 
@@ -75,28 +97,6 @@ router.post("/meeting-ended", async (req, res) => {
         // } else {
         //   console.log("User not found:", host_id);
         // }
-        // Respond to Zoom
-        response = {
-          message: "Successfully processed webhook",
-          status: 200,
-        };
-        res.status(response.status);
-        res.json(response);
-      } else if (event === "meeting.started") {
-        console.log("STARTED_EVENT", event);
-
-        const host_id = req.body.payload.object.host_id;
-        // Find the user by their Zoom Account ID and decrement sessions
-        const user = await ZoomUser.findOneAndUpdate(
-          { zoomAccountId: host_id },
-          { $inc: { sessions: +1 } },
-          { new: true } // This option returns the modified document
-        );
-        if (user) {
-          console.log("Successfully updated user:", user.name);
-        } else {
-          console.log("User not found:", host_id);
-        }
         // Respond to Zoom
         response = {
           message: "Successfully processed webhook",
