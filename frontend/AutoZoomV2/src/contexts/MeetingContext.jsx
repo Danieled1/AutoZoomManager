@@ -1,4 +1,4 @@
-import { useToast, useClipboard } from "@chakra-ui/react";
+import React, { useToast, useClipboard } from "@chakra-ui/react";
 import axios from "axios";
 import moment from "moment";
 import {
@@ -39,7 +39,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [liveMeetings, setLiveMeetings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  
+
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [usersMap, setUsersMap] = useState(() => {
