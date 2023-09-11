@@ -39,7 +39,9 @@ const keyframes = `
         opacity: 1;
     }
 `;
-export const modal_styles = {
+
+// Need to change the props to camal case
+export const modalStyles = {
   modal_content: {
     backgroundColor: "gray.200",
     borderRadius: "md",

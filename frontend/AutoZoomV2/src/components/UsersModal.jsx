@@ -11,7 +11,7 @@ import {
   Td,
   Badge,
 } from "@chakra-ui/react";
-import { modal_styles } from "../styles/Styles";
+import { modalStyles } from "../styles/Styles";
 import ModalTable from "./common/ModalTable";
 import { useMeetingContext } from "../contexts/MeetingContext";
 
@@ -45,15 +45,15 @@ function UsersModal({ onClose, isOpen }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
-      <ModalContent sx={modal_styles.modal_content}>
-        <ModalHeader sx={modal_styles.modal_header}>Live Meetings</ModalHeader>
-        <ModalCloseButton sx={modal_styles.secondary_color} />
-        <ModalBody sx={modal_styles.modal_body}>
+      <ModalContent sx={modalStyles.modal_content}>
+        <ModalHeader sx={modalStyles.modal_header}>Live Meetings</ModalHeader>
+        <ModalCloseButton sx={modalStyles.secondary_color} />
+        <ModalBody sx={modalStyles.modal_body}>
           <ModalTable
             data={liveMeetings}
             headers={headers}
             renderRow={renderRow}
-            tableStyles={modal_styles.table}
+            tableStyles={modalStyles.table}
           />
         </ModalBody>
         <ModalFooter>
