@@ -155,6 +155,7 @@ export const meeting_styles = {
     px: 4,
     py: 2,
     bg: "teal.400",
+    color: "white",
   },
 };
 
