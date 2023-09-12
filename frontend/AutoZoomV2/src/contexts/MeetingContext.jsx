@@ -146,18 +146,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       if (courseName.toLowerCase().includes("cyber")) {
         return "Nice try, Cyber Teacher. But your SQL injection won't work here. 🕵️‍♂️";
       }
-      if (courseName.toLowerCase().includes("qa")) {
-        return "A for effort, QA Teacher. But no bugs found here! 🐞";
-      }
-      if (courseName.toLowerCase().includes("full stack")) {
-        return "FullStack? You must be good at balancing things, but this input just tipped the scales! 🤹‍♂️";
-      }
-      if (courseName.toLowerCase().includes("ai")) {
-        return "Even AI can't crack this validation, nice try! 🤖";
-      }
-      if (courseName.toLowerCase().includes("data&digital")) {
-        return "Data&Digital? Your input is like a corrupt database—unusable! 🗃️";
-      }
+
       return "Nice try, but you can't bypass this validation. 🚫";
     }
 
