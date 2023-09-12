@@ -9,7 +9,7 @@ function FaviconAttribution() {
           Icons8
         </Link>
       </p>
-      <p style={{ opacity: 0.2 }}>Changil™</p>
+      <p style={{ opacity: 0.1 }}>Changil™</p>
     </Box>
   );
 }

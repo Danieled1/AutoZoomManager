@@ -107,7 +107,7 @@ export const meeting_styles = {
   box: {
     backgroundColor: "white",
     padding: { base: 2, sm: 4, md: 6, lg: 8, xl: 8 },
-    borderRadius: "lg",
+    borderRadius: "2xl",
     boxShadow: "xl",
     maxWidth: {
       base: "80vw",
@@ -154,6 +154,7 @@ export const meeting_styles = {
     width: "full",
     px: 4,
     py: 2,
+    bg: "teal.400",
   },
 };
 

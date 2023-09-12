@@ -10,11 +10,13 @@ import {
   Tooltip,
   Text,
   Divider,
+  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
 import { meeting_styles } from "../styles/Styles";
 import CreatableSelect from "react-select/creatable";
+import { WhatsappIcon, WhatsappShareButton } from "react-share";
 function MeetingForm() {
   const {
     teacherName,
@@ -67,6 +69,13 @@ function MeetingForm() {
       setCourseName(`Other: ${inputValue}`);
     }
   };
+  // Function to generate a message for support
+  const generateSupportMessage = () => {
+    return "I need help with my meeting.";
+  };
+
+  // Your support number (replace with the actual number)
+  const supportNumber = "0534824431";
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
@@ -118,22 +127,32 @@ function MeetingForm() {
             Create Meeting
           </Button>
         </Tooltip>
+        {/* <Tooltip
+          label="Click here to contact support via WhatsApp"
+          placement="bottom"
+        >
+          <Box sx={btn_box}>
+            <WhatsappShareButton
+              url={`https://wa.me/${supportNumber}`}
+              title={generateSupportMessage()}
+              sx={btn}
+            >
+              <IconButton
+                as="a"
+                colorScheme="teal"
+                variant="outline"
+                aria-label="Contact Support on WhatsApp"
+                sx={{
+                  width: "100%",
+                  justifyContent: "center",
+                }}
+              >
+                <WhatsappIcon size={32} round={true} />
+              </IconButton>
+            </WhatsappShareButton>
+          </Box>
+        </Tooltip> */}
       </Stack>
-      <Divider my={4} />
-      <Heading
-        as="p"
-        color="red.600"
-        fontWeight="bold"
-        mb={3}
-        mt={3}
-        textAlign="center"
-        fontSize="xl"
-      >
-        Clicking 'Create Meeting' will open the Zoom meeting in a new tab!
-      </Heading>
-      <Text color="red.500" textAlign="center" fontSize={"md"}>
-        Please ensure you allow pop-ups from this site.
-      </Text>
     </Box>
   );
 }
