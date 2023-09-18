@@ -8,33 +8,28 @@ import {
   FormHelperText,
   Button,
   Tooltip,
-  Text,
-  Divider,
-  IconButton,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
 import { meeting_styles } from "../styles/Styles";
 import CreatableSelect from "react-select/creatable";
-import { WhatsappIcon, WhatsappShareButton } from "react-share";
+import AnimatedText from "./Header/AnimatedText";
 function MeetingForm() {
   const {
     teacherName,
     setTeacherName,
     courseName,
     setCourseName,
-    totalSessionsCount,
     createMeeting,
-    areUsersAvailable,
   } = useMeetingContext();
-  const { box, stack, heading, btn_box, btn } = meeting_styles;
+  const { box, stack, heading, btn } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
-  const [optionValue, setOptionValue] = useState("");
   const handleCreateMeeting = async () => {
     setIsLoading(true);
     await createMeeting();
     setIsLoading(false);
   };
+  // Styles for selector of courses
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -59,35 +54,30 @@ function MeetingForm() {
   const options = [
     { value: "Full Stack", label: "Full Stack" },
     { value: "Cyber", label: "Cyber" },
-    { value: "Qa", label: "Qa" },
+    { value: "QA", label: "QA" },
     { value: "Data&Digital", label: "Data&Digital" },
     { value: "AI", label: "AI" },
-    { value: "Other", label: "Other (type your own)" },
+    { value: "Other", label: "(type your own)" },
   ];
   const handleInputChange = (inputValue, actionMeta) => {
     if (actionMeta.action === "create-option" && inputValue !== "Other") {
       setCourseName(`Other: ${inputValue}`);
     }
   };
-  // Function to generate a message for support
-  const generateSupportMessage = () => {
-    return "I need help with my meeting.";
-  };
 
-  // Your support number (replace with the actual number)
-  const supportNumber = "0534824431";
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
+        <AnimatedText />
         <Heading sx={heading} as="h2">
           Create Meeting
         </Heading>
         <FormControl>
-          <FormLabel>Your Name</FormLabel>
+          <FormLabel>Teacher Name</FormLabel>
           <Input
             value={teacherName}
             onChange={(e) => setTeacherName(e.target.value)}
-            placeholder="Your Name"
+            placeholder="Name"
             borderColor="teal"
             _hover={{
               borderColor: "teal",
@@ -127,31 +117,6 @@ function MeetingForm() {
             Create Meeting
           </Button>
         </Tooltip>
-        {/* <Tooltip
-          label="Click here to contact support via WhatsApp"
-          placement="bottom"
-        >
-          <Box sx={btn_box}>
-            <WhatsappShareButton
-              url={`https://wa.me/${supportNumber}`}
-              title={generateSupportMessage()}
-              sx={btn}
-            >
-              <IconButton
-                as="a"
-                colorScheme="teal"
-                variant="outline"
-                aria-label="Contact Support on WhatsApp"
-                sx={{
-                  width: "100%",
-                  justifyContent: "center",
-                }}
-              >
-                <WhatsappIcon size={32} round={true} />
-              </IconButton>
-            </WhatsappShareButton>
-          </Box>
-        </Tooltip> */}
       </Stack>
     </Box>
   );

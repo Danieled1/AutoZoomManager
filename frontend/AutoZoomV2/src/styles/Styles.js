@@ -133,8 +133,14 @@ export const meeting_styles = {
   },
   heading: {
     fontSize: "md",
+
+    fontWeight: "700",
+    borderBottom: "solid",
+    borderBottomWidth:"thin",
+    letterSpacing: "1.2px",
     color: "teal.500",
-    marginBottom: 4,
+    paddingBottom:2,
+    marginBottom: 3,
     fontSize: 26,
   },
   btn_box: {
@@ -154,8 +160,7 @@ export const meeting_styles = {
     width: "full",
     px: 4,
     py: 2,
-    bg: "teal.400",
-    color: "white",
+
   },
 };
 

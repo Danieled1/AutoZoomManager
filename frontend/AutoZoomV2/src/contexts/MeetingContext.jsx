@@ -138,7 +138,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     if (!sanitizedTeacherName || !sanitizedCourseName) {
       return "Empty inputs.Empty strings? Even a QA tester would enter something. 😏";
     }
-    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'/$\u0590-\u05FF]+$/;
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$\u0590-\u05FF]+$/;
     if (
       !whitelistPattern.test(sanitizedTeacherName) ||
       !whitelistPattern.test(sanitizedCourseName)

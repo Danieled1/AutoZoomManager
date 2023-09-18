@@ -33,7 +33,7 @@ const ShareMeeting = ({
                 href={meetingDetails.start_url}
                 target="_blank"
                 colorScheme="teal"
-                variant="outline"
+                variant="solid"
                 sx={btn}
               >
                 Create Host Session
@@ -49,7 +49,7 @@ const ShareMeeting = ({
             <Button
               onClick={onCopy}
               colorScheme="teal"
-              variant="outline"
+              variant="solid"
               sx={btn}
               leftIcon={<CopyIcon />}
             >
@@ -71,7 +71,7 @@ const ShareMeeting = ({
                 <IconButton
                   as="a"
                   colorScheme="teal"
-                  variant="outline"
+                  variant="solid"
                   aria-label="Share on WhatsApp"
                   sx={{
                     width: "100%",
