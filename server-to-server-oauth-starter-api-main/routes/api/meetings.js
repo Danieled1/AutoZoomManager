@@ -5,9 +5,7 @@ const errorHandler = require("../../utils/errorHandler");
 const { ZOOM_API_BASE_URL } = require("../../constants");
 const ZoomUser = require("../../models/ZoomUser");
 const router = express.Router();
-const schedule = require('node-schedule');
-
-
+const schedule = require("node-schedule");
 
 /**
  * Get a meeting
@@ -49,6 +47,9 @@ router.post("/:userId", async (req, res) => {
       meetingData,
       headerConfig
     );
+    // Old Way of updating zoom-users
+    /**
+    
     // const zoomUser = await ZoomUser.findOne({ zoomAccountId: userId });
     // if (zoomUser) {
     //   zoomUser.sessions += 1
@@ -65,6 +66,7 @@ router.post("/:userId", async (req, res) => {
     //   }
     // });
 
+     */
     return res.json(request.data);
   } catch (err) {
     return errorHandler(err, res, `Error creating meeting for user: ${userId}`);

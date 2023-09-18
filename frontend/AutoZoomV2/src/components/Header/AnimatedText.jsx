@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Text, Heading, Box } from "@chakra-ui/react";
-import { InfoIcon, WarningIcon } from "@chakra-ui/icons";
+import { WarningTwoIcon } from "@chakra-ui/icons";
 
 const AnimatedText = () => {
   const [showText, setShowText] = useState(true);
@@ -11,7 +11,7 @@ const AnimatedText = () => {
     const timer = setTimeout(() => {
       setShowText(false);
       setShowInfo(true);
-    }, 5000); // 5 seconds
+    }, 1000); // 5 seconds
 
     return () => clearTimeout(timer);
   }, []);
@@ -25,7 +25,7 @@ const AnimatedText = () => {
   };
 
   return (
-    <Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} m={2} >
+    <Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       {(showText || hover) && (
         <Text
           sx={{ transition: "opacity 3s ease-in-out" }}
@@ -33,23 +33,23 @@ const AnimatedText = () => {
         >
           <Heading
             as="p"
-            color="white"
-            bg="teal.400"
+            color="teal.500"
             fontWeight="bold"
-            borderRadius= "lg"
+            borderRadius="lg"
             p={2}
-            fontSize="2xl"
+            fontSize="xl"
+            textAlign={"center"}
           >
-            Clicking 'Create Meeting' will open the Zoom meeting in a new tab!
+            Clicking Create Meeting will open the Zoom meeting in a new tab!
           </Heading>
           <Heading
-            bg="red.500"
-            color="white"
+            color="red.500"
             fontWeight="bold"
-            borderRadius= "md"
+            borderRadius="md"
             mt={2}
             p={1}
             fontSize="md"
+            textAlign={"center"}
           >
             Please ensure you <u>allow</u> pop-ups from this site.
           </Heading>
@@ -59,9 +59,8 @@ const AnimatedText = () => {
         <Box
           sx={{ transition: "opacity 1s ease-in-out" }}
           opacity={showInfo ? 1 : 0}
-          
         >
-          <WarningIcon color="red.500" boxSize={10} />
+          <WarningTwoIcon color="yellow.400" boxSize={10} />
         </Box>
       )}
     </Box>

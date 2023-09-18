@@ -68,7 +68,6 @@ function MeetingForm() {
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
-        <AnimatedText />
         <Heading sx={heading} as="h2">
           Create Meeting
         </Heading>
@@ -106,6 +105,7 @@ function MeetingForm() {
             Select the name of the course for this meeting.
           </FormHelperText>
         </FormControl>
+        <AnimatedText />
         <Tooltip label="Click here to create a new meeting" placement="bottom">
           <Button
             colorScheme="teal"
@@ -117,6 +117,7 @@ function MeetingForm() {
             Create Meeting
           </Button>
         </Tooltip>
+        
       </Stack>
     </Box>
   );
