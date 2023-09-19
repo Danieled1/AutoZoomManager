@@ -33,13 +33,19 @@ router.get("/:meetingId", async (req, res) => {
 router.post("/:userId", async (req, res) => {
   const { headerConfig, params, body } = req;
   const { userId } = params;
-  const { topic, duration } = body; // extract duration from the request body
+  const { topic, duration, breakoutRooms } = body; // extract duration from the request body
 
   const meetingData = {
     topic: topic,
     type: 2, // Scheduled meeting
     duration: duration, // Meeting duration in minutes
     userId,
+    settings: {
+      breakout_room: {
+        enable: true,
+        rooms: breakoutRooms, // Include breakoutRooms in the meeting data
+      },
+    },
   };
   try {
     const request = await axios.post(
