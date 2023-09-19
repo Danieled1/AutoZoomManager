@@ -3,7 +3,7 @@ export const app_styles = {
     minHeight: "100vh",
     width: "100%",
     padding: { base: 2, sm: 3, md: 4, lg: 5 },
-    background: "linear-gradient(0deg, #6BC5E3, #ACD7EF, #E7F0FF)",
+    background: "#fffae5",
     animation: "gradientAnimation 40s ease-in-out infinite",
     display: "flex",
     flexDirection: "column",
@@ -47,7 +47,7 @@ export const modalStyles = {
     borderRadius: "md",
   },
   modal_header: {
-    color: "teal.500",
+    color: "#6836FF",
     fontSize: { base: "md", sm: "lg", md: "xl", lg: "xl", xl: "xl" },
   },
   modal_body: {
@@ -55,7 +55,7 @@ export const modalStyles = {
     padding: { base: 1, sm: 2, md: 3, lg: 4, xl: 4 },
   },
   primary_color: {
-    color: "teal.500",
+    color: "#6836FF",
   },
   secondary_color: {
     color: "gray.500",
@@ -64,7 +64,7 @@ export const modalStyles = {
     variant: "simple",
     size: "lg",
     "Tr>Th": {
-      color: "teal.500",
+      color: "#6836FF",
     },
     ".row": {
       marginBottom: "5px",
@@ -101,6 +101,13 @@ export const modalStyles = {
       visibility: "visible",
     },
   },
+  input: {
+    outline: "none",
+    focusBorderColor: "purple.500", // for focus border color
+    _focus: {
+      boxShadow: "0 0 0 2px var(--chakra-colors-purple-500)", // for focus shadow
+    },
+  },
 };
 
 export const meeting_styles = {
@@ -108,7 +115,8 @@ export const meeting_styles = {
     backgroundColor: "white",
     padding: { base: 2, sm: 4, md: 6, lg: 8, xl: 8 },
     borderRadius: "2xl",
-    boxShadow: "xl",
+    boxShadow:
+      "0px 12px 28px 0px rgba(0, 0, 0, 0.2), 0px 2px 4px 0px rgba(0, 0, 0, 0.1), 0px 0px 0px 1px rgba(255, 255, 255, 0.05) inset",
     maxWidth: {
       base: "80vw",
       sm: "60vw",
@@ -136,16 +144,17 @@ export const meeting_styles = {
 
     fontWeight: "700",
     borderBottom: "solid",
-    borderBottomWidth:"thin",
-    letterSpacing: "1.2px",
-    color: "teal.500",
-    paddingBottom:2,
+    borderBottomWidth: "thin",
+    letterSpacing: "1px",
+    color: "#6836FF",
+    paddingBottom: 2,
     marginBottom: 3,
     fontSize: 26,
   },
   btn_box: {
     display: "flex",
     flexDirection: "row",
+    gap: 10,
     justifyContent: "space-between",
     maxWidth: {
       base: "80vw",
@@ -154,20 +163,31 @@ export const meeting_styles = {
       lg: "40vw",
       xl: "30vw",
     },
-    width: "full",
+    width: "100%",
   },
   btn: {
     width: "full",
     px: 4,
     py: 2,
-
+    color: "white",
+    letterSpacing: "1px",
+    backgroundColor: "#6836FF",
+  },
+  btn_alternate: {
+    width: "full",
+    px: 4,
+    py: 2,
+    color: "black",
+    letterSpacing: "1px",
+    backgroundColor: "#FCB72B",
   },
 };
-
+// #FCB72B
+// #6836FF
 export const header_styles = {
   heading: {
     fontSize: { base: "3xl", sm: "3xl", md: "3xl", lg: "4xl", xl: "6xl" },
-    color: "teal.500",
+    color: "#6836FF",
     marginBottom: { base: 3, sm: 4, md: 5, lg: 5, xl: 5 },
     display: "inline-block",
     padding: "0.5em 1em",
@@ -181,7 +201,7 @@ export const header_styles = {
       height: "3px",
       width: "100%",
       backgroundImage:
-        "linear-gradient(90deg, teal.500 0%, teal.200 50%, teal.500 100%)",
+        "linear-gradient(90deg, #6836FF 0%, #FFF1BA 50%, #6836FF 100%)",
       animation: "pulse 2.2s infinite alternate",
     },
     "@keyframes pulse": {

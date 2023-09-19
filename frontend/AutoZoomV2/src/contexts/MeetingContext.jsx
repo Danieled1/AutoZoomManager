@@ -49,6 +49,9 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       };
     }, {});
   });
+  const [breakoutRooms, setBreakoutRooms] = useState([
+    { name: "", participants: [""] },
+  ]);
   const getUserLiveMeetings = async (userId) => {
     try {
       const today = new Date();
@@ -190,7 +193,12 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         duration: 420, // Meeting duration in minutes
         settings: {
           password: "",
+          breakout_room: {
+            enable: true,
+            rooms: breakoutRooms,
+          },
         },
+        breakoutRooms,
       },
       {
         headers: {
@@ -325,6 +333,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         fetchLiveMeetings,
         liveMeetings,
         areUsersAvailable,
+        breakoutRooms,
+        setBreakoutRooms,
       }}
     >
       {/* Users Occupation Box */}

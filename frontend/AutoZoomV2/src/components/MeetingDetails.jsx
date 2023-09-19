@@ -34,7 +34,7 @@ function MeetingDetails({ meetingDetails }) {
     <Box sx={box}>
       <Stack sx={stack} spacing={4}>
         <Heading sx={heading} fontSize="xl" mb={4}>
-          Meeting Details
+          Current Meeting
         </Heading>
         <ModalTable
           data={data}

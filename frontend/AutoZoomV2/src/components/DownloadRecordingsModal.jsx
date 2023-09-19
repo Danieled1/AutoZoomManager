@@ -12,7 +12,7 @@ import {
   Tr,
   Td,
 } from "@chakra-ui/react";
-import { modalStyles } from "../styles/Styles";
+import { meeting_styles, modalStyles } from "../styles/Styles";
 // Change 1
 // import ButtonGroups from "./common/ButtonGroups";
 // import CommonRecordingsHandler from "./common/commonRecordingsHandler";
@@ -37,8 +37,14 @@ const DownloadRecordingsModal = ({
   const [searchPerformed, setSearchPerformed] = useState(false);
 
   // Style variables
-  const { modal_content, modal_header, modal_body, secondary_color, table } =
-    modalStyles;
+  const {
+    modal_content,
+    modal_header,
+    modal_body,
+    secondary_color,
+    table,
+    input,
+  } = modalStyles;
 
   const fetchRecordings = async () => {
     CommonRecordingsHandler.fetchRecordings(
@@ -130,7 +136,16 @@ const DownloadRecordingsModal = ({
         <ModalHeader sx={modal_header}>Recordings Manager</ModalHeader>
         <ModalCloseButton sx={secondary_color} />
         <ModalBody sx={modal_body}>
-          <Input type="date" onChange={handleDateChange} autoFocus />
+          <Input
+            type="date"
+            onChange={handleDateChange}
+            autoFocus
+            _focus={{
+              outline: "none !important",
+              boxShadow: "0 0 1px 2px RGBA(0, 0, 0, 0.32) !important",
+              borderColor: "RGBA(0, 0, 0, 0.32) !important",
+            }}
+          />
           <ButtonGroups
             onFetch={fetchRecordings}
             onDownloadAll={handleDownloadAll}
@@ -148,7 +163,7 @@ const DownloadRecordingsModal = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" onClick={closeRecordingsModal}>
+          <Button colorScheme="blackAlpha" onClick={closeRecordingsModal}>
             Close
           </Button>
         </ModalFooter>

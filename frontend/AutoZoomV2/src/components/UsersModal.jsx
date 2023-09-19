@@ -57,7 +57,7 @@ function UsersModal({ onClose, isOpen }) {
           />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" onClick={onClose}>
+          <Button colorScheme="blackAlpha" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

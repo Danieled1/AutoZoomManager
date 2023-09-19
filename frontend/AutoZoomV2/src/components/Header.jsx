@@ -1,10 +1,9 @@
-import { Box, Divider, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Image } from "@chakra-ui/react";
 import { header_styles } from "../styles/Styles";
 import { useMeetingContext } from "../contexts/MeetingContext";
-import AnimatedText from "./Header/AnimatedText";
 
 function Header({ openModal, openRecordingsModal }) {
-  const { heading, span_box, sub_header } = header_styles;
+  const { heading } = header_styles;
   const { fetchLiveMeetings } = useMeetingContext();
 
   // Fetch live meetings when 'r' is clicked
@@ -14,6 +13,7 @@ function Header({ openModal, openRecordingsModal }) {
   };
   return (
     <>
+      <Image src="./icons/icons8-zoom-arcade-144.png" />
       <Heading sx={heading}>
         Auto Zoom{" "}
         <Box as="span" onClick={handleFetchLiveMeetings} colorscheme="teal">

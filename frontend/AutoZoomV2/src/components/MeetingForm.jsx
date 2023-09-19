@@ -8,6 +8,7 @@ import {
   FormHelperText,
   Button,
   Tooltip,
+  Image,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
@@ -21,9 +22,12 @@ function MeetingForm() {
     courseName,
     setCourseName,
     createMeeting,
+    breakoutRooms,
+    setBreakoutRooms,
   } = useMeetingContext();
   const { box, stack, heading, btn } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
+
   const handleCreateMeeting = async () => {
     setIsLoading(true);
     await createMeeting();
@@ -35,18 +39,18 @@ function MeetingForm() {
       ...provided,
       color: state.isSelected ? "white" : "black",
       backgroundColor: state.isSelected
-        ? "teal"
+        ? "#4727B3"
         : state.isFocused
-        ? "#b2dfdb"
+        ? "rgba(10,10,10,0.2)"
         : "white",
-      transition: "0.3s ease",
+      transition: "0.23s ease",
     }),
     control: (provided) => ({
       ...provided,
-      borderColor: "teal",
+      borderColor: "#522CCC",
       boxShadow: "none",
       "&:hover": {
-        borderColor: "teal",
+        borderColor: "#522CCC",
       },
     }),
   };
@@ -65,25 +69,40 @@ function MeetingForm() {
     }
   };
 
+  // Function to handle changes in breakout room names and participants
+  const handleBreakoutRoomChange = (index, key, value) => {
+    const newBreakoutRooms = [...breakoutRooms];
+    newBreakoutRooms[index][key] = value;
+    setBreakoutRooms(newBreakoutRooms);
+  };
+
+  // Function to add a new breakout room
+  const addBreakoutRoom = () => {
+    setBreakoutRooms([...breakoutRooms, { name: "", participants: [""] }]);
+  };
+
+  // Function to remove a breakout room
+  const removeBreakoutRoom = (index) => {
+    const newBreakoutRooms = [...breakoutRooms];
+    newBreakoutRooms.splice(index, 1);
+    setBreakoutRooms(newBreakoutRooms);
+  };
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
-        <Heading sx={heading} as="h2">
-          Create Meeting
-        </Heading>
         <FormControl>
           <FormLabel>Teacher Name</FormLabel>
           <Input
             value={teacherName}
             onChange={(e) => setTeacherName(e.target.value)}
             placeholder="Name"
-            borderColor="teal"
+            borderColor="#522CCC"
             _hover={{
-              borderColor: "teal",
+              borderColor: "#522CCC",
             }}
             _focus={{
-              borderColor: "teal",
-              boxShadow: "0 0 0 1px teal",
+              borderColor: "#522CCC",
+              boxShadow: "0 0 0 1px #522CCC",
             }}
           />
           <FormHelperText>Enter your full name.</FormHelperText>
@@ -105,19 +124,51 @@ function MeetingForm() {
             Select the name of the course for this meeting.
           </FormHelperText>
         </FormControl>
+        <FormControl>
+          <FormLabel>Breakout Rooms</FormLabel>
+          {breakoutRooms &&
+            breakoutRooms.length > 0 &&
+            breakoutRooms.map((room, index) => (
+              <Box key={index}>
+                <Input
+                  placeholder={`Room ${index + 1} Name`}
+                  value={room.name}
+                  onChange={(e) =>
+                    handleBreakoutRoomChange(index, "name", e.target.value)
+                  }
+                />
+                <Input
+                  placeholder={`Room ${
+                    index + 1
+                  } Participants (comma separated)`}
+                  value={room.participants.join(", ")}
+                  onChange={(e) =>
+                    handleBreakoutRoomChange(
+                      index,
+                      "participants",
+                      e.target.value.split(", ")
+                    )
+                  }
+                />
+                <Button onClick={() => removeBreakoutRoom(index)}>
+                  Remove Room
+                </Button>
+              </Box>
+            ))}
+          <Button onClick={addBreakoutRoom}>Add Breakout Room</Button>
+        </FormControl>
         <AnimatedText />
         <Tooltip label="Click here to create a new meeting" placement="bottom">
           <Button
-            colorScheme="teal"
             onClick={handleCreateMeeting}
             disabled={isLoading}
             isLoading={isLoading}
             sx={btn}
+            colorScheme="yellow"
           >
             Create Meeting
           </Button>
         </Tooltip>
-        
       </Stack>
     </Box>
   );
