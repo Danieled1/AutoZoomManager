@@ -9,12 +9,25 @@ import {
   Button,
   Tooltip,
   Image,
+  Text,
+  InputAddon,
+  InputRightAddon,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
 import { meeting_styles } from "../styles/Styles";
 import CreatableSelect from "react-select/creatable";
 import AnimatedText from "./Header/AnimatedText";
+import {
+  AddIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  DeleteIcon,
+  InfoIcon,
+  MinusIcon,
+  PlusSquareIcon,
+  SmallAddIcon,
+} from "@chakra-ui/icons";
 function MeetingForm() {
   const {
     teacherName,
@@ -25,8 +38,9 @@ function MeetingForm() {
     breakoutRooms,
     setBreakoutRooms,
   } = useMeetingContext();
-  const { box, stack, heading, btn } = meeting_styles;
+  const { box, stack, heading, btn, btn_room, btn_box } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const handleCreateMeeting = async () => {
     setIsLoading(true);
@@ -90,12 +104,13 @@ function MeetingForm() {
   return (
     <Box sx={box}>
       <Stack sx={stack} spacing={5}>
+        <Heading sx={heading}>Generate Meeting</Heading>
         <FormControl>
           <FormLabel>Teacher Name</FormLabel>
           <Input
             value={teacherName}
             onChange={(e) => setTeacherName(e.target.value)}
-            placeholder="Name"
+            placeholder="Enter Your Name"
             borderColor="#522CCC"
             _hover={{
               borderColor: "#522CCC",
@@ -108,7 +123,15 @@ function MeetingForm() {
           <FormHelperText>Enter your full name.</FormHelperText>
         </FormControl>
         <FormControl>
-          <FormLabel>Course Name</FormLabel>
+          <FormLabel>
+            Course Name
+            <Tooltip
+              label="Select a predefined course or type your own."
+              placement="right"
+            >
+              <InfoIcon ml={2} color="gray.500" />
+            </Tooltip>
+          </FormLabel>
           <CreatableSelect
             styles={customStyles}
             options={options}
@@ -125,37 +148,53 @@ function MeetingForm() {
           </FormHelperText>
         </FormControl>
         <FormControl>
-          <FormLabel>Breakout Rooms</FormLabel>
-          {breakoutRooms &&
-            breakoutRooms.length > 0 &&
-            breakoutRooms.map((room, index) => (
-              <Box key={index}>
-                <Input
-                  placeholder={`Room ${index + 1} Name`}
-                  value={room.name}
-                  onChange={(e) =>
-                    handleBreakoutRoomChange(index, "name", e.target.value)
-                  }
-                />
-                <Input
-                  placeholder={`Room ${
-                    index + 1
-                  } Participants (comma separated)`}
-                  value={room.participants.join(", ")}
-                  onChange={(e) =>
-                    handleBreakoutRoomChange(
-                      index,
-                      "participants",
-                      e.target.value.split(", ")
-                    )
-                  }
-                />
-                <Button onClick={() => removeBreakoutRoom(index)}>
-                  Remove Room
-                </Button>
-              </Box>
-            ))}
-          <Button onClick={addBreakoutRoom}>Add Breakout Room</Button>
+          <FormLabel
+            onClick={() => setDropdownOpen(!isDropdownOpen)}
+            style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
+            mb={4}
+          >
+            {isDropdownOpen ? <ChevronUpIcon /> : <ChevronDownIcon />} Breakout
+            Rooms(optional)
+          </FormLabel>
+          {isDropdownOpen && (
+            <Box>
+              <Button sx={btn_box} onClick={addBreakoutRoom}>
+                <SmallAddIcon marginRight={2} /> Add Room
+              </Button>
+              {breakoutRooms.length > 0
+                ? breakoutRooms.map((room, index) => (
+                    <Stack key={index} sx={box} spacing={5}>
+                      <Input
+                        placeholder={`Room ${index + 1} Name`}
+                        value={room.name}
+                        onChange={(e) =>
+                          handleBreakoutRoomChange(
+                            index,
+                            "name",
+                            e.target.value
+                          )
+                        }
+                      />
+
+                      <Input
+                        placeholder={`Participant emails separated by commas.`}
+                        value={room.participants.join(", ")}
+                        onChange={(e) =>
+                          handleBreakoutRoomChange(
+                            index,
+                            "participants",
+                            e.target.value.split(", ")
+                          )
+                        }
+                      />
+                      <Button onClick={() => removeBreakoutRoom(index)}>
+                        <DeleteIcon marginRight={2} /> Remove Room
+                      </Button>
+                    </Stack>
+                  ))
+                : null}
+            </Box>
+          )}
         </FormControl>
         <AnimatedText />
         <Tooltip label="Click here to create a new meeting" placement="bottom">

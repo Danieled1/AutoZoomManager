@@ -1,3 +1,8 @@
+import { Box } from "@chakra-ui/react";
+
+{
+  /* <Box ></Box> */
+}
 export const app_styles = {
   box: {
     minHeight: "100vh",
@@ -141,12 +146,11 @@ export const meeting_styles = {
   },
   heading: {
     fontSize: "md",
-
-    fontWeight: "700",
-    borderBottom: "solid",
-    borderBottomWidth: "thin",
-    letterSpacing: "1px",
-    color: "#6836FF",
+    fontWeight: "500",
+    // borderBottom: "solid",
+    borderBottomWidth: "3px",
+    letterSpacing: "0.8px",
+    color: "blackAlpha",
     paddingBottom: 2,
     marginBottom: 3,
     fontSize: 26,
@@ -164,6 +168,7 @@ export const meeting_styles = {
       xl: "30vw",
     },
     width: "100%",
+    marginBottom: "10px",
   },
   btn: {
     width: "full",
@@ -180,6 +185,13 @@ export const meeting_styles = {
     color: "black",
     letterSpacing: "1px",
     backgroundColor: "#FCB72B",
+  },
+  btn_room: {
+    px: 2,
+    color: "white",
+    letterSpacing: "1px",
+    backgroundColor: "#6836FF",
+    alignSelf: "center",
   },
 };
 // #FCB72B
