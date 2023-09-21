@@ -43,7 +43,7 @@ router.post("/:userId", async (req, res) => {
     settings: {
       breakout_room: {
         enable: true,
-        rooms: breakoutRooms, // Include breakoutRooms in the meeting data
+        // rooms: breakoutRooms, // Include breakoutRooms in the meeting data
       },
     },
   };
