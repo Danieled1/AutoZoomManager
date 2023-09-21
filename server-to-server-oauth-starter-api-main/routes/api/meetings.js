@@ -43,15 +43,15 @@ router.post("/:userId", async (req, res) => {
     settings: {
       breakout_room: {
         enable: true,
-        // rooms: breakoutRooms, // Include breakoutRooms in the meeting data
+        rooms: breakoutRooms, // Include breakoutRooms in the meeting data
       },
     },
   };
   try {
     const request = await axios.post(
       `${ZOOM_API_BASE_URL}/users/${userId}/meetings`,
-      meetingData,
-      headerConfig
+      headerConfig,
+      meetingData
     );
     // Old Way of updating zoom-users
     /**
