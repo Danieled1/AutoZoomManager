@@ -50,8 +50,8 @@ router.post("/:userId", async (req, res) => {
   try {
     const request = await axios.post(
       `${ZOOM_API_BASE_URL}/users/${userId}/meetings`,
-      headerConfig,
-      meetingData
+      meetingData,
+      headerConfig
     );
     // Old Way of updating zoom-users
     /**
