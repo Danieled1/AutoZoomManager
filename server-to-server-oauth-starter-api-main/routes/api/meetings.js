@@ -34,7 +34,7 @@ router.post("/:userId", async (req, res) => {
   const { headerConfig, params, body } = req;
   const { userId } = params;
   const { topic, duration, breakoutRooms } = body; // extract duration from the request body
-
+  console.log("breakoutRooms", breakoutRooms);
   const meetingData = {
     topic: topic,
     type: 2, // Scheduled meeting
