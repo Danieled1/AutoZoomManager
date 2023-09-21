@@ -49,7 +49,9 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       };
     }, {});
   });
-  const [breakoutRooms, setBreakoutRooms] = useState([]);
+  const [breakoutRooms, setBreakoutRooms] = useState([
+    { name: "", participants: [""] },
+  ]);
   const getUserLiveMeetings = async (userId) => {
     try {
       const today = new Date();

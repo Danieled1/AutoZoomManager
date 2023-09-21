@@ -8,10 +8,7 @@ import {
   FormHelperText,
   Button,
   Tooltip,
-  Image,
-  Text,
-  InputAddon,
-  InputRightAddon,
+  Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useMeetingContext } from "../contexts/MeetingContext";
@@ -19,13 +16,10 @@ import { meeting_styles } from "../styles/Styles";
 import CreatableSelect from "react-select/creatable";
 import AnimatedText from "./Header/AnimatedText";
 import {
-  AddIcon,
   ChevronDownIcon,
   ChevronUpIcon,
   DeleteIcon,
   InfoIcon,
-  MinusIcon,
-  PlusSquareIcon,
   SmallAddIcon,
 } from "@chakra-ui/icons";
 function MeetingForm() {
@@ -38,7 +32,7 @@ function MeetingForm() {
     breakoutRooms,
     setBreakoutRooms,
   } = useMeetingContext();
-  const { box, stack, heading, btn, btn_room, btn_box } = meeting_styles;
+  const { box, stack, heading, btn, btn_box, input } = meeting_styles;
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -111,26 +105,21 @@ function MeetingForm() {
             value={teacherName}
             onChange={(e) => setTeacherName(e.target.value)}
             placeholder="Enter Your Name"
-            borderColor="#522CCC"
-            _hover={{
-              borderColor: "#522CCC",
-            }}
-            _focus={{
-              borderColor: "#522CCC",
-              boxShadow: "0 0 0 1px #522CCC",
-            }}
+            sx={input}
           />
           <FormHelperText>Enter your full name.</FormHelperText>
         </FormControl>
         <FormControl>
           <FormLabel>
-            Course Name
-            <Tooltip
-              label="Select a predefined course or type your own."
-              placement="right"
-            >
-              <InfoIcon ml={2} color="gray.500" />
-            </Tooltip>
+            <Flex align="center">
+              Course Name
+              <Tooltip
+                label="Select a predefined course or type your own."
+                placement="right"
+              >
+                <InfoIcon ml={2} color="gray.500" />
+              </Tooltip>
+            </Flex>
           </FormLabel>
           <CreatableSelect
             styles={customStyles}
@@ -167,6 +156,7 @@ function MeetingForm() {
                       <Input
                         placeholder={`Room ${index + 1} Name`}
                         value={room.name}
+                        sx={input}
                         onChange={(e) =>
                           handleBreakoutRoomChange(
                             index,
@@ -178,6 +168,7 @@ function MeetingForm() {
 
                       <Input
                         placeholder={`Participant emails separated by commas.`}
+                        sx={input}
                         value={room.participants.join(", ")}
                         onChange={(e) =>
                           handleBreakoutRoomChange(

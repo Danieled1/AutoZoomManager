@@ -186,12 +186,15 @@ export const meeting_styles = {
     letterSpacing: "1px",
     backgroundColor: "#FCB72B",
   },
-  btn_room: {
-    px: 2,
-    color: "white",
-    letterSpacing: "1px",
-    backgroundColor: "#6836FF",
-    alignSelf: "center",
+  input: {
+    borderColor: "#522CCC",
+    _hover: {
+      borderColor: "#522CCC",
+    },
+    _focus: {
+      borderColor: "#522CCC",
+      boxShadow: "0 0 0 1px #522CCC",
+    },
   },
 };
 // #FCB72B
