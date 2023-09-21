@@ -73,7 +73,7 @@ router.post("/:userId", async (req, res) => {
     // });
 
      */
-    console.log(request.data);
+    console.log(request.data.settings.breakout_room);
     return res.json(request.data);
   } catch (err) {
     return errorHandler(err, res, `Error creating meeting for user: ${userId}`);
