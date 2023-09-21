@@ -73,6 +73,7 @@ router.post("/:userId", async (req, res) => {
     // });
 
      */
+    console.log(request.data);
     return res.json(request.data);
   } catch (err) {
     return errorHandler(err, res, `Error creating meeting for user: ${userId}`);
