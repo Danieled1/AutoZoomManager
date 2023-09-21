@@ -40,11 +40,14 @@ router.post("/:userId", async (req, res) => {
     type: 2, // Scheduled meeting
     duration: duration, // Meeting duration in minutes
     userId,
+    agenda: topic,
     settings: {
       breakout_room: {
-        enable: true,
+        enable: !!breakoutRooms,
         // rooms: breakoutRooms, // Include breakoutRooms in the meeting data
       },
+      waiting_room: false,
+      mute_upon_entry: true,
     },
   };
   try {
