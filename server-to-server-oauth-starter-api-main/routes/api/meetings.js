@@ -36,15 +36,15 @@ router.post("/:userId", async (req, res) => {
   const { topic, duration, breakoutRooms } = body; // extract duration from the request body
   // console.log("breakoutRooms", breakoutRooms);
   const meetingData = {
-    topic: topic,
+    topic,
     type: 2, // Scheduled meeting
-    duration: duration, // Meeting duration in minutes
+    duration: duration, // In minutes
     userId,
     agenda: topic,
     settings: {
       breakout_room: {
         enable: !!breakoutRooms,
-        // rooms: breakoutRooms, // Include breakoutRooms in the meeting data
+        // rooms: breakoutRooms, 
       },
       waiting_room: false,
       mute_upon_entry: true,
