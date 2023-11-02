@@ -1,6 +1,4 @@
-// const redis = require("./configs/redis");
 require("dotenv").config();
-
 const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -8,36 +6,25 @@ const { debug } = require("node:console");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
 const TokenModel = require("./models/TokenModel");
-let currentAccessToken = null; // Variable to hold the current access_token
+const tokenState = require("./utils/tokenRefresher"); 
+
 const app = express();
 
-/**
-  Default connection to redis - port 6379
- */
-// (async () => {
-//   await redis.connect();
-// })();
-
-// redis.on("connect", (err) => {
-//   if (err) {
-//     console.log("Could not establish connection with redis");
-//   } else {
-//     console.log("Connected to redis successfully");
-//   }
-// });
 connectDB();
+tokenState.initialize();
+
 app.use(cookieParser());
 
 app.use(
   cors({
     origin: [
-      // "https://zoom-generator-frontend.vercel.app",
-      // "https://zoom-generator-backend.vercel.app",
+      // "https://zoom-generator-backend-9b73668fa08e.herokuapp.com",
+      "*",
+      "https://zoom-generator-frontend-6acfe2abb78d.herokuapp.com",
       "http://ec2-3-80-182-53.compute-1.amazonaws.com:8001",
       "http://localhost:8000",
       "http://localhost:8001",
       "http://localhost:8080",
-      "*",
     ],
   })
 );
@@ -46,23 +33,13 @@ app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
 
-const updateCurrentAccessToken = async () => {
-  // Fetch the most recent token from MongoDB
-  const tokenData = await TokenModel.findOne().sort({ expires_in: -1 });
-  if (tokenData) {
-    currentAccessToken = tokenData.access_token;
-  }
-};
-updateCurrentAccessToken();
-
-/**
- * Add API Routes w/ tokenCheck middleware
- */
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
 app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
-
+app.get("/", (req, res) => {
+  res.status(200).send("Backend API is running");
+});
 /**
  *    API Route Breakdown:
  *    __Users__
@@ -97,6 +74,7 @@ const server = app.listen(PORT, () =>
  */
 const cleanup = async () => {
   debug("\nClosing HTTP server");
+  const currentAccessToken = tokenState.getAccessToken();
   if (currentAccessToken) {
     await TokenModel.deleteOne({ access_token: currentAccessToken });
   }

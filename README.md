@@ -1,73 +1,50 @@
 # AutoZoomManager
 
-AutoZoomManager is a web application for automating Zoom meeting tasks. It provides features such as scheduling meetings, generating meeting links, sending invitations, and managing recordings.
+AutoZoomManager is a web application designed to automate various Zoom meeting tasks. It offers functionalities such as scheduling meetings, generating unique meeting links, sending out email invitations, and handling meeting recordings.
+
+![AutoZoomManager - Internal Zoom Meeting Automation Tool | Feature Showcase](https://i9.ytimg.com/vi_webp/H1BX7cXeVKU/mqdefault.webp?v=651556fd&sqp=CNSt1agG&rs=AOn4CLBq9wnAGPA1JI52m1zZ7-FrQH2TMg)
+
+🎥 [Watch the AutoZoomManager Demo on YouTube](https://www.youtube.com/watch?v=H1BX7cXeVKU)
+
+## Application Evolution
+
+### Initial Deployment on AWS EC2
+
+The application was initially deployed on an EC2 instance on AWS. This provided a robust environment for the application to run and scale.
+
+### Containerization with Docker and Automation with GitHub Actions
+
+To streamline the development and deployment process, the application was containerized using Docker. A workflow was set up using GitHub Actions to automate tasks like building, containerization, caching, and deployment to the EC2 instance.
+
+### Transition to Heroku for HTTPS Requirement
+
+The most effective way to monitor meetings was identified to be through webhooks. However, the Zoom API required an HTTPS endpoint. To fulfill this requirement, the decision was made to transition the deployment to Heroku. This move also allowed for splitting the deployment into two separate processes: one for the frontend and another for the backend.
+
+### Transition from Redis to MongoDB
+
+Heroku's platform constraints made it challenging to run a Redis server. To better adapt to this environment and ensure efficient token management, Redis was replaced with MongoDB.
+
+### Integration of Zoom Webhooks
+
+With the acquisition of an HTTPS URL from Heroku, it became feasible to integrate webhooks with the Zoom application. This integration allows for real-time monitoring of meeting events.
+
+### Upcoming Features
+
+The next step in the application's evolution is to enhance the live meeting table to work seamlessly with the Zoom users stored in our database, in conjunction with the webhooks.
 
 ## Features
 
-- Schedule Zoom meetings with specified date, time, and duration.
-- Generate unique meeting links for each scheduled meeting.
-- Send email invitations to participants with meeting details and joining instructions.
-- Manage meeting recordings, including downloading and deleting recordings.
-- Display meeting analytics and statistics.
-- Integration with Zoom API for seamless interaction with the Zoom platform.
-
-## Installation
-
-### Local Development
-
-To run AutoZoomManager locally, follow these steps:
-
-#### Frontend
-
-1. Navigate to the frontend directory: `cd frontend/AutoZoomV2`.
-2. Install frontend dependencies: `npm ci` (for quicker installation).
-3. Start the frontend development server: `npm run dev`.
-4. The frontend application will be available at `http://localhost:8000`.
-
-#### Server
-
-1. Navigate to the server directory: `cd server-to-server-oauth-starter-api-main`.
-2. Create a `.env` file and add your Zoom credentials:
-   ```plaintext
-   ZOOM_ACCOUNT_ID=<your-zoom-account-id>
-   ZOOM_CLIENT_ID=<your-zoom-client-id>
-   ZOOM_CLIENT_SECRET=<your-zoom-client-secret>
-   Replace <your-zoom-account-id>, <your-zoom-client-id>, and <your-zoom-client-secret> with your actual Zoom credentials.
-   ```
-3. Build and start the server using Docker Compose:
-
-- For production mode: `docker-compose up prod`.
-- For development mode: `docker-compose up dev`.
-
-4. The server will be available at `http://localhost:8080`.
-
-### AWS Deployment with Docker and GitHub Actions
-
-To deploy AutoZoomManager on AWS using Docker and GitHub Actions, follow these steps:
-
-1. Set up your AWS EC2 instance and configure SSH access.
-2. Clone the repository on your local machine: `git clone https://github.com/your-username/your-repository.git`.
-3. Navigate to the project root directory: `cd your-repository`.
-4. Create a `.env` file in the `server-to-server-oauth-starter-api-main` directory and add your Zoom credentials (same as in local setup).
-5. Update the GitHub Actions workflow file (`.github/workflows/main.yml`) with your AWS EC2 instance details and credentials.
-6. Commit and push the changes to your GitHub repository.
-7. GitHub Actions will automatically trigger the workflow, build the Docker images, and deploy the application to your AWS EC2 instance.
-8. Access the deployed application by visiting your AWS EC2 instance's public IP or domain.
-
-## Usage
-
-1. Sign in to the AutoZoomManager application with your credentials.
-2. Navigate to the meetings dashboard to view a list of scheduled meetings.
-3. Click on the "New Meeting" button to schedule a new meeting.
-4. Fill in the meeting details, such as title, date, time, duration, and participant emails.
-5. Save the meeting, and the application will generate a unique meeting link and send invitations to the participants.
-6. On the meetings dashboard, you can view, edit, or delete scheduled meetings.
-7. Access the recording management section to download or delete meeting recordings.
-8. View meeting analytics and statistics to gain insights into meeting attendance and engagement.
+- **Schedule Zoom Meetings**: Define the date, time, and duration for your Zoom meetings.
+- **Unique Meeting Links**: Generate distinct meeting links for every scheduled meeting.
+- **Email Invitations**: Dispatch email invites to participants with all the necessary meeting details and instructions.
+- **Manage Recordings**: Oversee your meeting recordings, including options to download or delete them.
+- **Meeting Analytics**: Display insightful analytics and statistics related to your meetings.
+- **Zoom API Integration**: Seamless interaction with the Zoom platform through its API.
+- **Webhooks**: Integration with Zoom application webhooks to track when meetings start and end.
 
 ## Contributing
 
-Contributions to AutoZoomManager are welcome! If you find any issues or have suggestions for improvements, please submit a pull request or open an issue on the GitHub repository.
+Contributions to AutoZoomManager are always welcome! If you encounter any issues or have suggestions for improvements, feel free to submit a pull request or open an issue on this GitHub repository.
 
 ## License
 

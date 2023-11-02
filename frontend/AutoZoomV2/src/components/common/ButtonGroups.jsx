@@ -1,5 +1,6 @@
 import { ButtonGroup, Button, Tooltip } from "@chakra-ui/react";
 import { DownloadIcon, DeleteIcon } from "@chakra-ui/icons";
+import { meeting_styles } from "../../styles/Styles";
 
 // A mixed button group component for Fetch, Download All, Delete All, and row-specific Download and Delete actions
 function ButtonGroups({
@@ -14,6 +15,7 @@ function ButtonGroups({
   isRowSpecific,
   recording,
 }) {
+  const { btn, btn_alternate } = meeting_styles;
   // For table actions
   if (isRowSpecific) {
     return (
@@ -21,7 +23,7 @@ function ButtonGroups({
         <Tooltip label="Download" placement="top">
           <Button
             onClick={() => onDownload(recording)}
-            colorScheme="teal"
+            colorScheme="yellow"
             size="sm"
           >
             <DownloadIcon />
@@ -30,7 +32,7 @@ function ButtonGroups({
         <Tooltip label="Delete" placement="top">
           <Button
             onClick={() => onDelete(recording)}
-            colorScheme="red"
+            colorScheme="orange"
             size="sm"
           >
             <DeleteIcon />
@@ -41,14 +43,16 @@ function ButtonGroups({
     // For modal action buttons
   } else {
     return (
-      <ButtonGroup my={2}>
-        <Button onClick={onFetch}>Fetch Recordings</Button>
+      <ButtonGroup my={2} >
+        <Button colorScheme="blackAlpha" onClick={onFetch} sx={btn}>
+          Fetch Recordings
+        </Button>
         {searchPerformed && (
           <>
             <Button
               onClick={onDownloadAll}
-              colorScheme="teal"
               disabled={!areRecordingsAvailable}
+              sx={btn_alternate}
             >
               Download All
             </Button>

@@ -11,10 +11,11 @@ import {
 import { DownloadRecordingsModal, UsersModal } from "../components";
 import productionConfig from "../config/config.production";
 import developmentConfig from "../config/config.development";
+import escape from "validator/lib/escape";
 
 const MeetingContext = createContext();
 const localDev = "production";
-const environment = localDev 
+const environment = localDev;
 const config =
   environment === "production" ? productionConfig : developmentConfig;
 const { apiBaseUrl } = config;
@@ -48,6 +49,9 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       };
     }, {});
   });
+  const [breakoutRooms, setBreakoutRooms] = useState([
+    { name: "", participants: [""] },
+  ]);
   const getUserLiveMeetings = async (userId) => {
     try {
       const today = new Date();
@@ -93,17 +97,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
     setIsLoading(false);
   };
-  useEffect(() => {
-    fetchLiveMeetings(); // Fetch immediately when component mounts
-
-    const intervalId = setInterval(() => {
-      console.time("Fetched live meetings time");
-      fetchLiveMeetings(); // Fetch every 5 minutes
-      console.timeEnd("Fetched live meetings time");
-    }, 300000);
-
-    return () => clearInterval(intervalId); // Clear interval when component unmounts
-  }, []);
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
     if (topic && join_url) {
@@ -119,33 +112,66 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const openRecordingsModal = () => setIsRecordingsModalOpen(true);
   const closeRecordingsModal = () => setIsRecordingsModalOpen(false);
 
+  const sanitizeInput = (input) => {
+    let sanitized = input
+      .replace(/<script.*?>.*?<\/script>/g, "")
+      .replace(/(['";])/g, "\\$1")
+      .trim();
+    sanitized = escape(sanitized);
+    return sanitized;
+  };
   const validateInputs = () => {
-    if (!teacherName || !courseName) {
-      return false;
+    if (!teacherName && !courseName) {
+      return "Missed inputs, even AI can't guess your name or course. 🤖";
     }
+    if (teacherName.includes("<script>") || courseName.includes("<script>")) {
+      return " XSS protection. Nice try, but you can't bypass this validation. 🚫";
+    }
+    const sanitizedTeacherName = sanitizeInput(teacherName);
+    const sanitizedCourseName = sanitizeInput(courseName);
+    if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
+      return "Long input. Your input is longer than my last code review. 📚";
+    }
+    if (
+      typeof sanitizedTeacherName !== "string" ||
+      typeof sanitizedCourseName !== "string"
+    ) {
+      return "Wrong input type. Your input type is more confusing than JavaScript's type coercion. 🤨";
+    }
+    if (!sanitizedTeacherName || !sanitizedCourseName) {
+      return "Empty inputs.Empty strings? Even a QA tester would enter something. 😏";
+    }
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$\u0590-\u05FF]+$/;
+    if (
+      !whitelistPattern.test(sanitizedTeacherName) ||
+      !whitelistPattern.test(sanitizedCourseName)
+    ) {
+      if (courseName.toLowerCase().includes("cyber")) {
+        return "Nice try, Cyber Teacher. But your SQL injection won't work here. 🕵️‍♂️";
+      }
+
+      return "Nice try, but you can't bypass this validation. 🚫";
+    }
+
     return true;
   };
 
-  // BUG = NOT PICKING USERS CORRECTLY ============================================================================
   const selectRandomUser = useCallback(async () => {
     try {
-      // Fetch eligible users from the server
       const response = await axios.get(`${apiBaseUrl}/api/zoom-users/eligible`);
       const eligibleUsers = response.data.eligibleZoomUsers;
-      console.log(eligibleUsers, "eligibleUsers");
       if (!eligibleUsers || eligibleUsers.length === 0) {
         displayErrorToast(
           "No Eligible Users.",
           "There are no eligible users left to create a meeting."
         );
-        setAreUsersAvailable(false); // Update the state to reflect no users are available
+        setAreUsersAvailable(false);
         return null;
       }
 
       const randomIndex = Math.floor(Math.random() * eligibleUsers.length);
       const selectedUser = eligibleUsers[randomIndex];
       const selectedUserId = selectedUser.zoomAccountId;
-      console.log(selectedUserId, "userid");
 
       return { selectedUser, selectedUserId };
     } catch (err) {
@@ -158,7 +184,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   }, []);
 
   const createMeetingRequest = async (selectedUserId) => {
-    console.log(selectedUserId, "SELECTED in createMeetingRequest");
     const response = await axios.post(
       `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
@@ -168,7 +193,12 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         duration: 420, // Meeting duration in minutes
         settings: {
           password: "",
+          breakout_room: {
+            enable: true,
+            rooms: breakoutRooms,
+          },
         },
+        breakoutRooms,
       },
       {
         headers: {
@@ -230,16 +260,13 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
 
   const createMeeting = async () => {
-    if (!validateInputs()) {
-      displayErrorToast(
-        "Data Required.",
-        "Please fill in your name and course name."
-      );
+    const validationMessage = validateInputs();
+    if (validationMessage !== true) {
+      displayErrorToast("Validation Failed", validationMessage);
       return;
     }
 
     const { selectedUser, selectedUserId } = await selectRandomUser();
-    console.log(selectedUser, "selectedUser");
     if (!selectedUser) {
       displayErrorToast(
         "No Eligible Users.",
@@ -274,10 +301,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-  // Follow the usersMap object through the usage
-  // useEffect(() => {
-  //   console.log(usersMap, "usersmap - useEffect");
-  // }, [usersMap]);
   return (
     <MeetingContext.Provider
       value={{
@@ -306,6 +329,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         fetchLiveMeetings,
         liveMeetings,
         areUsersAvailable,
+        breakoutRooms,
+        setBreakoutRooms,
       }}
     >
       {/* Users Occupation Box */}
