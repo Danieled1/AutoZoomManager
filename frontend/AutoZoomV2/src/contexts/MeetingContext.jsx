@@ -301,10 +301,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
   }
-  // Follow the usersMap object through the usage
-  // useEffect(() => {
-  //   console.log(usersMap, "usersmap - useEffect");
-  // }, [usersMap]);
   return (
     <MeetingContext.Provider
       value={{
