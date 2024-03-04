@@ -1,12 +1,12 @@
 import axios from "axios";
 import { format, isValid } from "date-fns";
-
+const excludedZoomAccountId = "K4vA4XKUSoKC-oYP5I4UOA";
 const CommonRecordingsHandler = {
   async fetchRecordings(apiBaseUrl, usersMap, date, setRecordings, displaySuccessToast, displayErrorToast, setIsLoading, setSearchPerformed) {
     try {
       // console.log("Current base url:", `${apiBaseUrl}`);
       setIsLoading(true);
-      const promises = Object.values(usersMap).map(async (user) => {
+      const promises = Object.values(usersMap).filter(user => user.id !== excludedZoomAccountId).map(async (user) => {
         const response = await axios.get(
           `${apiBaseUrl}/api/users/${user.id}/recordings`,
           {

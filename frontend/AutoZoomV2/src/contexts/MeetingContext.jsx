@@ -29,7 +29,7 @@ function shuffle(array) {
 export const MeetingProvider = ({ children, initialUsersMap }) => {
   const shuffledUsers = shuffle([...initialUsersMap]);
   const [areUsersAvailable, setAreUsersAvailable] = useState(true);
-
+  const [lessonName, setLessonName] = useState("")
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
@@ -125,7 +125,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       return "Missed inputs, even AI can't guess your name or course. 🤖";
     }
     if (teacherName.includes("<script>") || courseName.includes("<script>")) {
-      return " XSS protection. Nice try, but you can't bypass this validation. 🚫";
+      return " XSS protection. Nice try. 🚫";
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
@@ -139,15 +139,15 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       return "Wrong input type. Your input type is more confusing than JavaScript's type coercion. 🤨";
     }
     if (!sanitizedTeacherName || !sanitizedCourseName) {
-      return "Empty inputs.Empty strings? Even a QA tester would enter something. 😏";
+      return "Empty inputs. Empty strings? Even a QA tester would enter something. 😏";
     }
-    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$\u0590-\u05FF]+$/;
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$()\\u0590-\\u05FF]+$/;
     if (
       !whitelistPattern.test(sanitizedTeacherName) ||
       !whitelistPattern.test(sanitizedCourseName)
     ) {
       if (courseName.toLowerCase().includes("cyber")) {
-        return "Nice try, Cyber Teacher. But your SQL injection won't work here. 🕵️‍♂️";
+        return "We don't like those characters. 🕵️‍♂️";
       }
 
       return "Nice try, but you can't bypass this validation. 🚫";
@@ -184,12 +184,12 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   }, []);
 
   const createMeetingRequest = async (selectedUserId) => {
+    const dateOfLesson = moment().format("DD/MM/YYYY");
+    const topic = `${dateOfLesson}-${courseName}-${lessonName}-${teacherName}-1(a)-00.00.00`;
     const response = await axios.post(
       `${apiBaseUrl}/api/meetings/${selectedUserId}`,
       {
-        topic: `${teacherName} - ${courseName} - ${moment().format(
-          "DD/MM/YYYY"
-        )}`,
+        topic,
         duration: 420, // Meeting duration in minutes
         settings: {
           password: "",
@@ -198,7 +198,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
             rooms: breakoutRooms,
           },
         },
-        breakoutRooms,
       },
       {
         headers: {
@@ -308,6 +307,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         setTeacherName,
         courseName,
         setCourseName,
+        lessonName,
+        setLessonName,
         totalSessionsCount,
         setTotalSessionsCount,
         usersMap,

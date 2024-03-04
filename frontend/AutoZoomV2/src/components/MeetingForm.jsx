@@ -28,6 +28,8 @@ function MeetingForm() {
     setTeacherName,
     courseName,
     setCourseName,
+    lessonName,
+    setLessonName,
     createMeeting,
     breakoutRooms,
     setBreakoutRooms,
@@ -135,6 +137,16 @@ function MeetingForm() {
           <FormHelperText>
             Select the name of the course for this meeting.
           </FormHelperText>
+        </FormControl>
+        <FormControl>
+          <FormLabel>Lesson Name</FormLabel>
+          <Input
+            value={lessonName}
+            onChange={(e) => setLessonName(e.target.value)}
+            placeholder="Lesson's Name"
+            sx={input}
+          />
+          <FormHelperText>Enter your lesson name.</FormHelperText>
         </FormControl>
         <FormControl>
           <FormLabel
