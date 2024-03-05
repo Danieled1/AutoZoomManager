@@ -1,23 +1,21 @@
-import { useToast, useClipboard } from "@chakra-ui/react";
 import axios from "axios";
 import moment from "moment";
+import escape from "validator/lib/escape";
+import productionConfig from "../config/config.production";
+import developmentConfig from "../config/config.development";
+import { useToast, useClipboard } from "@chakra-ui/react";
+import { DownloadRecordingsModal, UsersModal } from "../components";
 import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useState,
 } from "react";
-import { DownloadRecordingsModal, UsersModal } from "../components";
-import productionConfig from "../config/config.production";
-import developmentConfig from "../config/config.development";
-import escape from "validator/lib/escape";
 
 const MeetingContext = createContext();
-const localDev = "production";
-const environment = localDev;
-const config =
-  environment === "production" ? productionConfig : developmentConfig;
+const config = {
+  apiBaseUrl: "https://zoom-generator-backend-9b73668fa08e.herokuapp.com",
+};
 const { apiBaseUrl } = config;
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
@@ -130,16 +128,16 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
     if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
-      return "Long input. Your input is longer than my last code review. 📚";
+      return "Long input. Longer than my last code review. 📚";
     }
     if (
       typeof sanitizedTeacherName !== "string" ||
       typeof sanitizedCourseName !== "string"
     ) {
-      return "Wrong input type. Your input type is more confusing than JavaScript's type coercion. 🤨";
+      return "Wrong input type. It's more confusing than JavaScript's type coercion. 🤨";
     }
     if (!sanitizedTeacherName || !sanitizedCourseName) {
-      return "Empty inputs. Empty strings? Even a QA tester would enter something. 😏";
+      return "Empty inputs.";
     }
     const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$()\\u0590-\\u05FF]+$/;
     if (

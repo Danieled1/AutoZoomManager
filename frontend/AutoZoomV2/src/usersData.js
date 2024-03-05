@@ -21,40 +21,47 @@ const initialUsers = [
     currentTeacher: "",
   },
   {
-    name: "Ben Siboni = bensiboni",
+    name: "Ben Siboni",
     id: "kAcApAGpR7Kf4ywAphqX-A",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",
   },
   {
-    name: "Support = BenCiboni",
+    name: "Support",
     id: "nn8k71iTTeCCATWa37DQDA",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",
   },
   {
-    name: "Cofounder = bensiboni",
+    name: "Cofounder",
     id: "qlDVdAnSQzOdp44u5ah8Gg",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",
   },
   {
-    name: "Digital = EcomSchool",
+    name: "Digital",
     id: "rF4NddpwTjON1PWRWvYxmA",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",
   },
   {
-    name: "Info = ecomschool",
+    name: "Info",
     id: "VuDa9cLIRn6g3Wu-tlMYng",
     sessions: 0,
     meetingIds: [],
     currentTeacher: "",
   },
+  {
+    name: "Service",
+    id: "ixOt_u3PS-CR6Dd6AyoBBA",
+    sessions: 0,
+    meetingIds: [],
+    currentTeacher: "",
+  }
 ];
 
 export default initialUsers;
