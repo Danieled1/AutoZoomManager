@@ -143,7 +143,7 @@ function MeetingForm() {
           <Input
             value={lessonName}
             onChange={(e) => setLessonName(e.target.value)}
-            placeholder="Lesson's Name"
+            placeholder="Lesson Name"
             sx={input}
           />
           <FormHelperText>Enter your lesson name.</FormHelperText>

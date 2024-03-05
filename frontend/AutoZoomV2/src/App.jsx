@@ -1,13 +1,15 @@
+import React, { lazy, Suspense, useState } from 'react';
 import { Box, Flex } from "@chakra-ui/react";
-import {
-  Header,
-  MeetingForm,
-  MeetingDetails,
-  ShareMeeting,
-  FaviconAttribution,
-} from "./components";
+import { Header, MeetingForm } from "./components";
 import { useMeetingContext } from "./contexts/MeetingContext";
 import { app_styles } from "./styles/Styles";
+
+const FaviconAttribution = lazy(() =>
+  import("./components/FaviconAttribution")
+);
+const ShareMeeting = lazy(() => import("./components/ShareMeeting"));
+const MeetingDetails = lazy(() => import("./components/MeetingDetails"));
+
 const App = () => {
   const {
     meetingDetails,
@@ -27,20 +29,22 @@ const App = () => {
         {/* Create Meeting Box */}
         <MeetingForm />
         {meetingDetails && meetingDetails.join_url && (
-          <>
-            {/* Share Meeting Box */}
-            <ShareMeeting
-              meetingDetails={meetingDetails}
-              hasCopied={hasCopied}
-              onCopy={onCopy}
-              generateWhatsAppMessage={generateWhatsAppMessage}
-            />
-            {/* Meeting Details Box */}
-            <MeetingDetails meetingDetails={meetingDetails} />
-          </>
+          <Suspense fallback={<div>Loading meeting components...</div>}>
+            <>
+              <ShareMeeting
+                meetingDetails={meetingDetails}
+                hasCopied={hasCopied}
+                onCopy={onCopy}
+                generateWhatsAppMessage={generateWhatsAppMessage}
+              />
+              <MeetingDetails meetingDetails={meetingDetails} />
+            </>
+          </Suspense>
         )}
       </Flex>
-      <FaviconAttribution />
+      <Suspense fallback={<div>Loading...</div>}>
+        <FaviconAttribution />
+      </Suspense>
     </Box>
   );
 };

@@ -1,8 +1,6 @@
 import axios from "axios";
 import moment from "moment";
 import escape from "validator/lib/escape";
-import productionConfig from "../config/config.production";
-import developmentConfig from "../config/config.development";
 import { useToast, useClipboard } from "@chakra-ui/react";
 import { DownloadRecordingsModal, UsersModal } from "../components";
 import {
@@ -73,25 +71,35 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     return sanitized;
   };
   const validateInputs = () => {
+    const errors = {
+      missingInput: "Please enter both your name and the course name.",
+      xssDetected: "Input contains invalid characters and has been rejected for security reasons.",
+      inputTooLong: "Input exceeds maximum length (255 characters).",
+      invalidType: "Input should be a text string.",
+      emptyInput: "Input cannot be empty.",
+      invalidCharacters: "Input contains invalid characters not allowed in this form.",
+      cyberAttackDetected: "Suspicious input detected. Nice try, but security measures are in place."
+    };
     if (!teacherName && !courseName) {
-      return "Missed inputs, even AI can't guess your name or course. 🤖";
+      return errors.missingInput;
     }
     if (teacherName.includes("<script>") || courseName.includes("<script>")) {
-      return " XSS protection. Nice try. 🚫";
+      return errors.xssDetected;
     }
     const sanitizedTeacherName = sanitizeInput(teacherName);
     const sanitizedCourseName = sanitizeInput(courseName);
+
     if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
-      return "Long input. Longer than my last code review. 📚";
+      return errors.inputTooLong;
     }
     if (
       typeof sanitizedTeacherName !== "string" ||
       typeof sanitizedCourseName !== "string"
     ) {
-      return "Wrong input type. It's more confusing than JavaScript's type coercion. 🤨";
+      return errors.invalidType;
     }
     if (!sanitizedTeacherName || !sanitizedCourseName) {
-      return "Empty inputs.";
+      return errors.emptyInput;
     }
     const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$()\\u0590-\\u05FF]+$/;
     if (
@@ -99,10 +107,10 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       !whitelistPattern.test(sanitizedCourseName)
     ) {
       if (courseName.toLowerCase().includes("cyber")) {
-        return "We don't like those characters. 🕵️‍♂️";
+        return errors.cyberAttackDetected;
       }
 
-      return "Nice try, but you can't bypass this validation. 🚫";
+      return errors.invalidCharacters;
     }
 
     return true;
