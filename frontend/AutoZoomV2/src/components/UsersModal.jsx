@@ -17,29 +17,16 @@ import { useMeetingContext } from "../contexts/MeetingContext";
 
 function UsersModal({ onClose, isOpen }) {
   const headers = ["Teacher", "Course", "Date", "Meeting ID", "Created At"];
-  const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
 
-  const renderRow = (meeting, index) => {
-    // Split the topic into teacher, course, and date
-    const [teacher, course, date] = meeting.topic.split(" - ");
-    const createdDate = new Date(meeting.created_at).toLocaleString();
-
+  // const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
+  const renderRow = () => {
     return (
-      <Tr key={meeting.id} className="row">
-        <Td>{teacher}</Td>
-        <Td>{course}</Td>
-        <Td>{date}</Td>
-        <Td>{meeting.id}</Td>
-        <Td>{createdDate}</Td>
-        {/* Add a badge when the user has reached the maximum sessions */}
-        {meeting.status === "started" && (
-          <Td>
-            <Badge colorScheme="green" p="1" fontSize="0.8em">
-              Meeting Started
-            </Badge>
-          </Td>
-        )}
-      </Tr>
+      <Tr key="placeholder-row">
+      <Td colSpan="5" textAlign="center">
+      Live Meetings Feature Will Be Back Soon, currently in development phase.
+        {/* For Displaying Rows of data based on Headers. */}
+      </Td>
+    </Tr>
     );
   };
   return (
@@ -50,7 +37,7 @@ function UsersModal({ onClose, isOpen }) {
         <ModalCloseButton sx={modalStyles.secondary_color} />
         <ModalBody sx={modalStyles.modal_body}>
           <ModalTable
-            data={liveMeetings}
+            data={[false]}
             headers={headers}
             renderRow={renderRow}
             tableStyles={modalStyles.table}

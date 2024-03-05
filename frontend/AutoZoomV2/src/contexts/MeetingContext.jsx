@@ -33,8 +33,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
   const [meetingDetails, setMeetingDetails] = useState({});
   const [isRecordingsModalOpen, setIsRecordingsModalOpen] = useState(false);
-  const [liveMeetings, setLiveMeetings] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
@@ -50,51 +48,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [breakoutRooms, setBreakoutRooms] = useState([
     { name: "", participants: [""] },
   ]);
-  const getUserLiveMeetings = async (userId) => {
-    try {
-      const today = new Date();
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
 
-      const fromDate = today.toISOString().split("T")[0];
-      const toDate = tomorrow.toISOString().split("T")[0];
-
-      const response = await axios.get(
-        `${apiBaseUrl}/api/users/${userId}/meetings?type=live&from=${fromDate}&to=${toDate}`
-      );
-      return response.data.meetings || [];
-    } catch (err) {
-      console.error(err.message);
-      return [];
-    }
-  };
-  // Fetch live meetings when the component mounts
-  const fetchLiveMeetings = async () => {
-    setIsLoading(true);
-    try {
-      const userIds = Object.values(usersMap).map((user) => user.id);
-      const meetingsPromises = userIds.map((userId) =>
-        getUserLiveMeetings(userId)
-      );
-      const meetingsData = await Promise.all(meetingsPromises);
-      // Flatten the array of meetings data
-      const allMeetings = [].concat(...meetingsData);
-      // Get today's date at the start of the day
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      // Filter the meetings to include only those scheduled for today
-      const liveMeetings = allMeetings.filter((meeting) => {
-        const meetingDate = new Date(meeting.start_time);
-        meetingDate.setHours(0, 0, 0, 0);
-        return +meetingDate === +today; // Use unary plus operator to compare dates by their numeric value
-      });
-      setLiveMeetings(liveMeetings);
-    } catch (err) {
-      console.error(err.message);
-      setLiveMeetings([]);
-    }
-    setIsLoading(false);
-  };
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
     if (topic && join_url) {
@@ -325,8 +279,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         displayErrorToast,
         formatBytes,
         apiBaseUrl,
-        fetchLiveMeetings,
-        liveMeetings,
         areUsersAvailable,
         breakoutRooms,
         setBreakoutRooms,
