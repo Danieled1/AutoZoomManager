@@ -78,7 +78,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       invalidType: "Input should be a text string.",
       emptyInput: "Input cannot be empty.",
       invalidCharacters: "Input contains invalid characters not allowed in this form.",
-      cyberAttackDetected: "Suspicious input detected. Nice try, but security measures are in place."
     };
     if (!teacherName && !courseName) {
       return errors.missingInput;
@@ -106,9 +105,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
       !whitelistPattern.test(sanitizedTeacherName) ||
       !whitelistPattern.test(sanitizedCourseName)
     ) {
-      if (courseName.toLowerCase().includes("cyber")) {
-        return errors.cyberAttackDetected;
-      }
 
       return errors.invalidCharacters;
     }
