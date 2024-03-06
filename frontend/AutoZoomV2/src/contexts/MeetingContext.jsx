@@ -71,44 +71,43 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     return sanitized;
   };
   const validateInputs = () => {
-    const errors = {
-      missingInput: "Please enter both your name and the course name.",
-      xssDetected: "Input contains invalid characters and has been rejected for security reasons.",
-      inputTooLong: "Input exceeds maximum length (255 characters).",
-      invalidType: "Input should be a text string.",
-      emptyInput: "Input cannot be empty.",
-      invalidCharacters: "Input contains invalid characters not allowed in this form.",
-    };
+  const MAX_INPUT_LENGTH = 255;
+  const errors = {
+    missingInput: "Both teacher name and course name are required.",
+    inputTooLong: `Each input must be less than ${MAX_INPUT_LENGTH} characters long.`,
+    emptyInput: "Inputs must not be empty.",
+    invalidCharacters: "Inputs contain invalid characters."
+  };
     if (!teacherName && !courseName) {
       return errors.missingInput;
     }
-    if (teacherName.includes("<script>") || courseName.includes("<script>")) {
-      return errors.xssDetected;
-    }
-    const sanitizedTeacherName = sanitizeInput(teacherName);
-    const sanitizedCourseName = sanitizeInput(courseName);
-
-    if (sanitizedTeacherName.length > 255 || sanitizedCourseName.length > 255) {
+    if (teacherName.length > MAX_INPUT_LENGTH || courseName.length > MAX_INPUT_LENGTH) {
       return errors.inputTooLong;
     }
-    if (
-      typeof sanitizedTeacherName !== "string" ||
-      typeof sanitizedCourseName !== "string"
-    ) {
-      return errors.invalidType;
-    }
-    if (!sanitizedTeacherName || !sanitizedCourseName) {
+    if (!teacherName.trim() || !courseName.trim()) {
       return errors.emptyInput;
     }
-    const whitelistPattern = /^[a-zA-Z0-9 _.,!"'&/$()\\u0590-\\u05FF]+$/;
-    if (
-      !whitelistPattern.test(sanitizedTeacherName) ||
-      !whitelistPattern.test(sanitizedCourseName)
-    ) {
+    const whitelistPattern = /^[a-zA-Z0-9 _.,!:"'&/$()\u0590-\u05FF]+$/;
+      // Function to find invalid characters
+  const findInvalidCharacters = (input) => {
+    return [...input].filter(character => !whitelistPattern.test(character));
+  };
 
-      return errors.invalidCharacters;
-    }
+  // Check teacherName for invalid characters
+  const invalidTeacherChars = findInvalidCharacters(teacherName);
+  if (invalidTeacherChars.length > 0) {
+    console.log('Validation Error: invalidCharacters in teacherName');
+    console.log('Invalid characters:', invalidTeacherChars.join(' '));
+    return errors.invalidCharacters;
+  }
 
+  // Check courseName for invalid characters
+  const invalidCourseChars = findInvalidCharacters(courseName);
+  if (invalidCourseChars.length > 0) {
+    console.log('Validation Error: invalidCharacters in courseName');
+    console.log('Invalid characters:', invalidCourseChars.join(' '));
+    return errors.invalidCharacters;
+  }
     return true;
   };
 
