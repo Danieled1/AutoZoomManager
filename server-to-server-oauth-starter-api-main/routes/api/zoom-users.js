@@ -36,7 +36,6 @@ router.post("/add", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const zoomUsers = await ZoomUser.find();
-    s;
     return res.status(201).send({ success: true, ZoomUsers: zoomUsers });
   } catch (err) {
     return res.status(500).json({
