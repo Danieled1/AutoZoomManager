@@ -1,12 +1,14 @@
 import { Box, Heading, Image } from "@chakra-ui/react";
 import { header_styles } from "../styles/Styles";
+import { useContext } from "react";
+import { useModalsContext } from "../contexts/ModalsContext";
 
-function Header({ openModal, openRecordingsModal }) {
+function Header() {
   const { heading } = header_styles;
-
+  const {openLiveUsersModal, openRecordingsModal} = useModalsContext();
   // Fetch live meetings when 'r' is clicked
   const handleFetchLiveMeetings = () => {
-    openModal();
+    openLiveUsersModal();
   };
   return (
     <>

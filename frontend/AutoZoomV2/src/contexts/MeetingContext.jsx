@@ -1,8 +1,7 @@
 import axios from "axios";
 import moment from "moment";
-import escape from "validator/lib/escape";
+import { useValidation } from '../hooks/useValidation'
 import { useToast, useClipboard } from "@chakra-ui/react";
-import { DownloadRecordingsModal, UsersModal } from "../components";
 import {
   createContext,
   useCallback,
@@ -28,10 +27,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   const [lessonName, setLessonName] = useState("")
   const [teacherName, setTeacherName] = useState("");
   const [courseName, setCourseName] = useState("");
-  const [totalSessionsCount, setTotalSessionsCount] = useState(0);
   const [meetingDetails, setMeetingDetails] = useState({});
-  const [isRecordingsModalOpen, setIsRecordingsModalOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [totalSessionsCount, setTotalSessionsCount] = useState(0);
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [usersMap, setUsersMap] = useState(() => {
@@ -47,6 +44,8 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     { name: "", participants: [""] },
   ]);
 
+  const { validateInputs } = useValidation();
+
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
     if (topic && join_url) {
@@ -55,61 +54,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
     }
     return "";
   }, [meetingDetails]);
-
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
-
-  const openRecordingsModal = () => setIsRecordingsModalOpen(true);
-  const closeRecordingsModal = () => setIsRecordingsModalOpen(false);
-
-  const sanitizeInput = (input) => {
-    let sanitized = input
-      .replace(/<script.*?>.*?<\/script>/g, "")
-      .replace(/(['";])/g, "\\$1")
-      .trim();
-    sanitized = escape(sanitized);
-    return sanitized;
-  };
-  const validateInputs = () => {
-  const MAX_INPUT_LENGTH = 255;
-  const errors = {
-    missingInput: "Both teacher name and course name are required.",
-    inputTooLong: `Each input must be less than ${MAX_INPUT_LENGTH} characters long.`,
-    emptyInput: "Inputs must not be empty.",
-    invalidCharacters: "Inputs contain invalid characters."
-  };
-    if (!teacherName && !courseName) {
-      return errors.missingInput;
-    }
-    if (teacherName.length > MAX_INPUT_LENGTH || courseName.length > MAX_INPUT_LENGTH) {
-      return errors.inputTooLong;
-    }
-    if (!teacherName.trim() || !courseName.trim()) {
-      return errors.emptyInput;
-    }
-    const whitelistPattern = /^[a-zA-Z0-9 _.,!:"'&/$()\u0590-\u05FF]+$/;
-      // Function to find invalid characters
-  const findInvalidCharacters = (input) => {
-    return [...input].filter(character => !whitelistPattern.test(character));
-  };
-
-  // Check teacherName for invalid characters
-  const invalidTeacherChars = findInvalidCharacters(teacherName);
-  if (invalidTeacherChars.length > 0) {
-    console.log('Validation Error: invalidCharacters in teacherName');
-    console.log('Invalid characters:', invalidTeacherChars.join(' '));
-    return errors.invalidCharacters;
-  }
-
-  // Check courseName for invalid characters
-  const invalidCourseChars = findInvalidCharacters(courseName);
-  if (invalidCourseChars.length > 0) {
-    console.log('Validation Error: invalidCharacters in courseName');
-    console.log('Invalid characters:', invalidCourseChars.join(' '));
-    return errors.invalidCharacters;
-  }
-    return true;
-  };
 
   const selectRandomUser = useCallback(async () => {
     try {
@@ -214,7 +158,7 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
   };
 
   const createMeeting = async () => {
-    const validationMessage = validateInputs();
+    const validationMessage = validateInputs(teacherName, courseName);
     if (validationMessage !== true) {
       displayErrorToast("Validation Failed", validationMessage);
       return;
@@ -271,10 +215,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         meetingDetails,
         updateMeetingDetails,
         createMeeting,
-        openModal,
-        closeModal,
-        openRecordingsModal,
-        closeRecordingsModal,
         hasCopied,
         onCopy,
         generateWhatsAppMessage,
@@ -287,19 +227,6 @@ export const MeetingProvider = ({ children, initialUsersMap }) => {
         setBreakoutRooms,
       }}
     >
-      {/* Users Occupation Box */}
-      <UsersModal onClose={closeModal} isOpen={isOpen} />
-
-      {/* Download & Delete Recordings Box */}
-      <DownloadRecordingsModal
-        isRecordingsModalOpen={isRecordingsModalOpen}
-        closeRecordingsModal={closeRecordingsModal}
-        usersMap={usersMap}
-        displayErrorToast={displayErrorToast}
-        displaySuccessToast={displaySuccessToast}
-        formatBytes={formatBytes}
-        apiBaseUrl={apiBaseUrl}
-      />
       {children}
     </MeetingContext.Provider>
   );

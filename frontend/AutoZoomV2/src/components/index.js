@@ -5,3 +5,4 @@ export { default as ShareMeeting } from "./ShareMeeting";
 export { default as UsersModal } from "./UsersModal";
 export { default as DownloadRecordingsModal } from "./DownloadRecordingsModal";
 export { default as FaviconAttribution } from "./FaviconAttribution";
+export { default as ModalsContainer } from './modals/ModalsContainer';
