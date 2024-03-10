@@ -7,8 +7,8 @@ import UsersModal from "../UsersModal";
 const ModalsContainer = () => {
   const {
     usersMap,
-    displayErrorToast,
-    displaySuccessToast,
+    errorToast,
+    successToast,
     formatBytes,
     apiBaseUrl,
   } = useMeetingContext() || {};
@@ -28,8 +28,8 @@ const ModalsContainer = () => {
         isRecordingsModalOpen={isRecordingsModalOpen}
         closeRecordingsModal={closeRecordingsModal}
         usersMap={usersMap}
-        displayErrorToast={displayErrorToast}
-        displaySuccessToast={displaySuccessToast}
+        displayErrorToast={errorToast}
+        displaySuccessToast={successToast}
         formatBytes={formatBytes}
         apiBaseUrl={apiBaseUrl}
       />

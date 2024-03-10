@@ -6,9 +6,9 @@ const CommonRecordingsHandler = {
     try {
       // console.log("Current base url:", `${apiBaseUrl}`);
       setIsLoading(true);
-      const promises = Object.values(usersMap).filter(user => user.id !== excludedZoomAccountId).map(async (user) => {
+      const promises = Object.values(usersMap).filter(user => user.zoomAccountId !== excludedZoomAccountId).map(async (user) => {
         const response = await axios.get(
-          `${apiBaseUrl}/api/users/${user.id}/recordings`,
+          `${apiBaseUrl}/api/users/${user.zoomAccountId}/recordings`,
           {
             params: {
               from: date,
