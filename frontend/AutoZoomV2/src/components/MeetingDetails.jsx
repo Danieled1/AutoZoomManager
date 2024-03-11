@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Tr, Td, Box, Stack, Heading } from "@chakra-ui/react";
 import moment from "moment";
-import { meeting_styles, modal_styles } from "../styles/Styles";
+import { meeting_styles, modalStyles } from "../styles/Styles";
 import ModalTable from "./common/ModalTable";
 
 function MeetingDetails({ meetingDetails }) {
@@ -34,13 +34,13 @@ function MeetingDetails({ meetingDetails }) {
     <Box sx={box}>
       <Stack sx={stack} spacing={4}>
         <Heading sx={heading} fontSize="xl" mb={4}>
-          Meeting Details
+          Current Meeting
         </Heading>
         <ModalTable
           data={data}
           headers={headers}
           renderRow={renderRow}
-          tableStyles={modal_styles.table}
+          tableStyles={modalStyles.table}
           size={"sm"}
           
         />

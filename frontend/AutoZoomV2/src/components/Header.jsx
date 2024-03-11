@@ -1,31 +1,28 @@
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Image } from "@chakra-ui/react";
 import { header_styles } from "../styles/Styles";
-import { useMeetingContext } from "../contexts/MeetingContext";
+import { useContext } from "react";
+import { useModalsContext } from "../contexts/ModalsContext";
 
-function Header({ openModal, openRecordingsModal }) {
-  const { heading, span_box, sub_header } = header_styles;
-  const { fetchLiveMeetings } = useMeetingContext();
-
+function Header() {
+  const { heading } = header_styles;
+  const {openLiveUsersModal, openRecordingsModal} = useModalsContext();
   // Fetch live meetings when 'r' is clicked
   const handleFetchLiveMeetings = () => {
-    fetchLiveMeetings();
-    openModal();
+    openLiveUsersModal();
   };
   return (
     <>
+      <Image src="./icons/icons8-zoom-arcade-144.png" />
       <Heading sx={heading}>
-        AutoZoom{" "}
+        Auto Zoom{" "}
         <Box as="span" onClick={handleFetchLiveMeetings} colorscheme="teal">
-          G
+          M
         </Box>
-        enerato
+        anage
         <Box as="span" onClick={openRecordingsModal} colorscheme="teal">
           r
         </Box>
       </Heading>
-      <Text sx={sub_header}>
-        Create and manage your Zoom meetings effortlessly.
-      </Text>
     </>
   );
 }

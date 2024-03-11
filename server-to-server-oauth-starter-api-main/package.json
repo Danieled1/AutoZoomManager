@@ -1,19 +1,19 @@
 {
-    "name": "Zoom S2S API Boilerplate",
+    "name": "autozoomv2-backend",
     "version": "1.0.0",
-    "description": "Boilerplate express api server with Zoom server-to-server authentication implemented",
+    "description": "express api server with Zoom server-to-server authentication implemented with MongoDB",
     "main": "index.js",
     "scripts": {
         "start": "node index.js",
         "dev": "nodemon --legacy-watch index.js"
     },
-    "author": "Brandon Abajelo",
+    "author": "Daniel Chai Edri",
     "license": "ISC",
     "dependencies": {
         "axios": "^0.27.2",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
-        "dotenv": "^16.0.2",
+        "dotenv": "^16.3.1",
         "express": "^4.18.1",
         "moment": "^2.29.4",
         "mongoose": "^7.4.3",

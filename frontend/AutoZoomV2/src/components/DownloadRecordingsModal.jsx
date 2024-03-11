@@ -12,12 +12,12 @@ import {
   Tr,
   Td,
 } from "@chakra-ui/react";
-import { modal_styles } from "../styles/Styles";
-
-import ButtonGroups from "./common/ButtonGroups";
-import CommonRecordingsHandler from "./common/commonRecordingsHandler";
-import ModalTable from "./common/ModalTable";
-
+import { meeting_styles, modalStyles } from "../styles/Styles";
+// Change 1
+// import ButtonGroups from "./common/ButtonGroups";
+// import CommonRecordingsHandler from "./common/commonRecordingsHandler";
+// import ModalTable from "./common/ModalTable";
+import { ButtonGroups, CommonRecordingsHandler, ModalTable } from "./common";
 const DownloadRecordingsModal = ({
   isRecordingsModalOpen,
   closeRecordingsModal,
@@ -27,13 +27,24 @@ const DownloadRecordingsModal = ({
   formatBytes,
   apiBaseUrl,
 }) => {
+  // State variables for modal functionality
   const [date, setDate] = useState("");
   const [recordings, setRecordings] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  // State variables for download and search features
   const [downloadsInitiated, setDownloadsInitiated] = useState(false);
   const [searchPerformed, setSearchPerformed] = useState(false);
-  const { modal_content, modal_header, modal_body, secondary_color, table } =
-    modal_styles;
+
+  // Style variables
+  const {
+    modal_content,
+    modal_header,
+    modal_body,
+    secondary_color,
+    table,
+    input,
+  } = modalStyles;
 
   const fetchRecordings = async () => {
     CommonRecordingsHandler.fetchRecordings(
@@ -94,13 +105,15 @@ const DownloadRecordingsModal = ({
     );
 
   const headers = ["User", "Topic", "Date", "File Size", "Actions"];
-
+  const handleStartTime = (start_time) => {
+    return start_time.replace(/\//g, ".");
+  };
   const renderRow = (result, index) =>
     result.recordings.map((recording, recordingIndex) => (
-      <Tr key={`${index}-${recordingIndex}`} className='row'>
+      <Tr key={`${index}-${recordingIndex}`} className="row">
         <Td>{result.user}</Td>
-        <Td className='truncate'>{recording.topic}</Td>
-        <Td className='truncate'>{recording.start_time}</Td>
+        <Td className="truncate">{handleStartTime(recording.topic)}</Td>
+        <Td className="truncate">{recording.start_time}</Td>
         <Td>{formatBytes(recording.file_size)}</Td>
         <Td>
           <ButtonGroups
@@ -116,14 +129,23 @@ const DownloadRecordingsModal = ({
     <Modal
       isOpen={isRecordingsModalOpen}
       onClose={closeRecordingsModal}
-      size='6xl'
+      size="6xl"
     >
       <ModalOverlay />
       <ModalContent sx={modal_content}>
         <ModalHeader sx={modal_header}>Recordings Manager</ModalHeader>
         <ModalCloseButton sx={secondary_color} />
         <ModalBody sx={modal_body}>
-          <Input type='date' onChange={handleDateChange} autoFocus />
+          <Input
+            type="date"
+            onChange={handleDateChange}
+            autoFocus
+            _focus={{
+              outline: "none !important",
+              boxShadow: "0 0 1px 2px RGBA(0, 0, 0, 0.32) !important",
+              borderColor: "RGBA(0, 0, 0, 0.32) !important",
+            }}
+          />
           <ButtonGroups
             onFetch={fetchRecordings}
             onDownloadAll={handleDownloadAll}
@@ -141,7 +163,7 @@ const DownloadRecordingsModal = ({
           />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='teal' onClick={closeRecordingsModal}>
+          <Button colorScheme="blackAlpha" onClick={closeRecordingsModal}>
             Close
           </Button>
         </ModalFooter>

@@ -11,53 +11,40 @@ import {
   Td,
   Badge,
 } from "@chakra-ui/react";
-import { modal_styles } from "../styles/Styles";
+import { modalStyles } from "../styles/Styles";
 import ModalTable from "./common/ModalTable";
 import { useMeetingContext } from "../contexts/MeetingContext";
 
 function UsersModal({ onClose, isOpen }) {
   const headers = ["Teacher", "Course", "Date", "Meeting ID", "Created At"];
-  const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
 
-  const renderRow = (meeting, index) => {
-    // Split the topic into teacher, course, and date
-    const [teacher, course, date] = meeting.topic.split(" - ");
-    const createdDate = new Date(meeting.created_at).toLocaleString();
-
+  // const { liveMeetings } = useMeetingContext(); // Use liveMeetings instead of usersMap
+  const renderRow = () => {
     return (
-      <Tr key={meeting.id} className="row">
-        <Td>{teacher}</Td>
-        <Td>{course}</Td>
-        <Td>{date}</Td>
-        <Td>{meeting.id}</Td>
-        <Td>{createdDate}</Td>
-        {/* Add a badge when the user has reached the maximum sessions */}
-        {meeting.status === "started" && (
-          <Td>
-            <Badge colorScheme="green" p="1" fontSize="0.8em">
-              Meeting Started
-            </Badge>
-          </Td>
-        )}
-      </Tr>
+      <Tr key="placeholder-row">
+      <Td colSpan="5" textAlign="center">
+      Live Meetings Feature Will Be Back Soon, currently in development phase.
+        {/* For Displaying Rows of data based on Headers. */}
+      </Td>
+    </Tr>
     );
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
-      <ModalContent sx={modal_styles.modal_content}>
-        <ModalHeader sx={modal_styles.modal_header}>Live Meetings</ModalHeader>
-        <ModalCloseButton sx={modal_styles.secondary_color} />
-        <ModalBody sx={modal_styles.modal_body}>
+      <ModalContent sx={modalStyles.modal_content}>
+        <ModalHeader sx={modalStyles.modal_header}>Live Meetings</ModalHeader>
+        <ModalCloseButton sx={modalStyles.secondary_color} />
+        <ModalBody sx={modalStyles.modal_body}>
           <ModalTable
-            data={liveMeetings}
+            data={[false]}
             headers={headers}
             renderRow={renderRow}
-            tableStyles={modal_styles.table}
+            tableStyles={modalStyles.table}
           />
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" onClick={onClose}>
+          <Button colorScheme="blackAlpha" onClick={onClose}>
             Close
           </Button>
         </ModalFooter>

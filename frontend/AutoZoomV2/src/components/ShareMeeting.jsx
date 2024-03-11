@@ -21,19 +21,19 @@ const ShareMeeting = ({
   return (
     <Box sx={box}>
       <Stack sx={stack}>
-        <Heading sx={heading}>Share Meeting</Heading>
+        <Heading sx={heading}>Quick Actions</Heading>
         {meetingDetails.start_url && (
           <Box sx={btn_box}>
             <Tooltip
-              label="Click here if the Zoom meeting did not start automatically"
+              label="Click here if the Zoom meeting did not start automatically or crashed."
               placement="bottom"
             >
               <Button
                 as="a"
                 href={meetingDetails.start_url}
                 target="_blank"
-                colorScheme="teal"
-                variant="outline"
+                colorScheme="yellow"
+                variant="solid"
                 sx={btn}
               >
                 Create Host Session
@@ -48,8 +48,8 @@ const ShareMeeting = ({
           >
             <Button
               onClick={onCopy}
-              colorScheme="teal"
-              variant="outline"
+              colorScheme="yellow"
+              variant="solid"
               sx={btn}
               leftIcon={<CopyIcon />}
             >
@@ -70,13 +70,10 @@ const ShareMeeting = ({
               >
                 <IconButton
                   as="a"
-                  colorScheme="teal"
-                  variant="outline"
+                  colorScheme="yellow"
+                  variant="solid"
                   aria-label="Share on WhatsApp"
-                  sx={{
-                    width: "100%",
-                    justifyContent: "center",
-                  }}
+                  sx={btn}
                 >
                   <WhatsappIcon size={32} round={true} />
                 </IconButton>
