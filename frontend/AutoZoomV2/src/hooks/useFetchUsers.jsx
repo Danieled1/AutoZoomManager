@@ -14,7 +14,6 @@ export const useFetchUsers = (apiBaseUrl) => {
         const fetchUsers = async () => {
             try {
                 const { data } = await axios.get(`${apiBaseUrl}/api/zoom-users/`);
-                console.log(data);
                 const mappedUsers = data.ZoomUsers.reduce((acc, user) => {
                     acc[user.zoomAccountId] = user;
                     return acc;

@@ -2,7 +2,7 @@ import axios from "axios";
 import moment from "moment";
 import { useValidation } from "../hooks/useValidation";
 import { useFetchUsers } from "../hooks/useFetchUsers";
-import { useToast, useClipboard } from "@chakra-ui/react";
+import { useClipboard } from "@chakra-ui/react";
 import { createContext, useCallback, useContext, useState } from "react";
 import { formatBytes } from "../utils/utils";
 import { useCustomToast } from "../utils/toastTypes";
@@ -19,7 +19,6 @@ export const MeetingProvider = ({ children }) => {
   const [courseName, setCourseName] = useState("");
   const [meetingDetails, setMeetingDetails] = useState({});
   const [totalSessionsCount, setTotalSessionsCount] = useState(0);
-  const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(meetingDetails.join_url || "");
   const [breakoutRooms, setBreakoutRooms] = useState([
     { name: "", participants: [""] },
