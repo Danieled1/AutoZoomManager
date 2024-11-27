@@ -3,10 +3,11 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const { debug } = require("node:console");
+const wss = require("./wss");
 const { tokenCheck } = require("./middlewares/tokenCheck");
 const connectDB = require("./configs/mongo");
 const TokenModel = require("./models/TokenModel");
-const tokenState = require("./utils/tokenRefresher"); 
+const tokenState = require("./utils/tokenRefresher");
 
 const app = express();
 
@@ -33,10 +34,12 @@ app.use([express.json(), express.urlencoded({ extended: false })]);
 
 app.options("*", cors());
 
+
 app.use("/api/users", tokenCheck, require("./routes/api/users"));
 app.use("/api/meetings", tokenCheck, require("./routes/api/meetings"));
 app.use("/api/zoom-users", tokenCheck, require("./routes/api/zoom-users"));
 app.use("/api/webhooks", tokenCheck, require("./routes/api/webhooks"));
+app.use('/api/downloads', require('./routes/api/downloads'));
 app.get("/", (req, res) => {
   res.status(200).send("Backend API is running");
 });
@@ -68,7 +71,11 @@ const PORT = process.env.PORT || 8080;
 const server = app.listen(PORT, () =>
   console.log(`Listening on port ${[PORT]}!`)
 );
-
+server.on("upgrade", (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, (ws) => {
+    wss.emit("connection", ws, request);
+  });
+});
 /**
  * Graceful shutdown, removes access_token from mongo
  */
@@ -86,3 +93,5 @@ const cleanup = async () => {
 
 process.on("SIGTERM", cleanup);
 process.on("SIGINT", cleanup);
+
+module.exports = { wss }

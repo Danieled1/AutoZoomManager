@@ -10,16 +10,20 @@
     "author": "Daniel Chai Edri",
     "license": "ISC",
     "dependencies": {
+        "@ffmpeg-installer/ffmpeg": "^1.1.0",
         "axios": "^0.27.2",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
         "express": "^4.18.1",
+        "fluent-ffmpeg": "^2.1.3",
+        "googleapis": "^140.0.1",
         "moment": "^2.29.4",
         "mongoose": "^7.4.3",
         "node-schedule": "^2.1.1",
         "query-string": "^7.1.1",
-        "redis": "^4.3.1"
+        "redis": "^4.3.1",
+        "ws": "^8.18.0"
     },
     "devDependencies": {
         "eslint-config-airbnb-base": "^15.0.0"

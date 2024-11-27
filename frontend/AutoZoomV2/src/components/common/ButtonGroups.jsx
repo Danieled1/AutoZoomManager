@@ -1,6 +1,7 @@
 import { ButtonGroup, Button, Tooltip } from "@chakra-ui/react";
 import { DownloadIcon, DeleteIcon } from "@chakra-ui/icons";
 import { meeting_styles } from "../../styles/Styles";
+import { useModalsContext } from "../../contexts/ModalsContext";
 
 // A mixed button group component for Fetch, Download All, Delete All, and row-specific Download and Delete actions
 function ButtonGroups({
