@@ -77,7 +77,7 @@ const CommonRecordingsHandler = {
     try {
       console.log("Entered downloadSingleRecording in commonHandler");
 
-      const downloadUrl = `${apiBaseUrl}/api/downloads/download-single?fileUrl=${encodeURIComponent(
+      const downloadUrl = `http://localhost:8080/api/downloads/download-single?fileUrl=${encodeURIComponent(
         selectedRecording.download_url
       )}&title=${encodeURIComponent(selectedRecording.topic)}`;
 
@@ -189,9 +189,9 @@ const CommonRecordingsHandler = {
       ws.onclose = () => {
         console.log("WebSocket connection closed.");
       };
-
+      
       // API request to the server to trigger downloads
-      const response = await axios.post(`${apiBaseUrl}/api/downloads/download-all-recordings`, { recordings });
+      const response = await axios.post(`http://localhost:8080/api/downloads/download-all-recordings`, { recordings });
       console.log(response.data);
       if (response.status === 200) {
         displaySuccessToast(
