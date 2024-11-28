@@ -25,6 +25,7 @@ const DownloadRecordingsModal = ({
   usersMap,
   displaySuccessToast,
   displayErrorToast,
+  displayDownloadLogToast,
   formatBytes,
   apiBaseUrl,
 }) => {
@@ -58,7 +59,7 @@ const DownloadRecordingsModal = ({
       apiBaseUrl,
     );
   };
-  const downloadAllRecordings = () => {
+  const downloadAll = () => {
     const userConfirmed = window.confirm(
       "Are you sure you want to DOWNLOAD all recordings in this list?"
     );
@@ -68,13 +69,13 @@ const DownloadRecordingsModal = ({
         recordings,
         displaySuccessToast,
         displayErrorToast,
+        displayDownloadLogToast,
         apiBaseUrl
       );
     } else {
       console.log("User canceled the action.");
     }
   };
-  
   const deleteSingle = async (meetingId, action, recordingId) => {
     const userConfirmed = window.confirm(
       "Are you sure you want to DELETE this recording from the cloud?"
@@ -94,7 +95,7 @@ const DownloadRecordingsModal = ({
       console.log("User canceled the action.");
     }
   };
-  const deleteAllRecordings = async (action) => {
+  const deleteAll = async (action) => {
     CommonRecordingsHandler.deleteAllRecordings(
       apiBaseUrl,
       recordings,
@@ -106,12 +107,12 @@ const DownloadRecordingsModal = ({
   };
 
   const handleDateChange = (event) => setDate(event.target.value);
-  const handleDownloadAll = () => downloadAllRecordings();
-  const handleDeleteAll = () => deleteAllRecordings("trash");
+  const handleDownloadAll = () => downloadAll();
+  const handleDeleteAll = () => deleteAll("trash");
   const handleDownload = (recording) => downloadSingle(recording);
   const handleDelete = (recording) => deleteSingle(recording.meetingId, "trash", recording.recordingId);
 
-  const headers = ["Actions", "Date", "File Size", "Topic", "User"];
+  const headers = ["Actions", "Lesson Topic","Date", "Zoom User", , "File Size"];
   const handleStartTime = (start_time) => {
     return start_time.replace(/\//g, ".");
   };
@@ -126,15 +127,15 @@ const DownloadRecordingsModal = ({
             recording={recording}
           />
         </Td>
-        <Td className="truncate">{recording.start_time}</Td>
-        <Td>{formatBytes(recording.file_size)}</Td>
         <Td className="truncate">{handleStartTime(recording.topic)}</Td>
+        <Td className="truncate">{recording.start_time}</Td>
 
         <Td>{result.user}</Td>
+        <Td>{formatBytes(recording.file_size)}</Td>
       </Tr>
     ));
   return (
-    <Modal isOpen={isRecordingsModalOpen} onClose={closeRecordingsModal} size="5xl">
+    <Modal isOpen={isRecordingsModalOpen} onClose={closeRecordingsModal} size="full">
       <ModalOverlay />
       <ModalContent sx={modal_content}>
         <ModalHeader sx={modal_header}>Recordings Manager</ModalHeader>
@@ -149,6 +150,7 @@ const DownloadRecordingsModal = ({
               boxShadow: "0 0 1px 2px RGBA(0, 0, 0, 0.32) !important",
               borderColor: "RGBA(0, 0, 0, 0.32) !important",
             }}
+            sx={{width:"none", mx:"8px"}}
           />
           <ButtonGroups
             onFetch={fetchRecordings}

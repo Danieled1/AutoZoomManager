@@ -25,7 +25,7 @@ export const MeetingProvider = ({ children }) => {
   ]);
   const { validateInputs } = useValidation();
   const { usersMap, areUsersAvailable } = useFetchUsers(apiBaseUrl);
-  const { successToast, errorToast } = useCustomToast();
+  const { successToast, errorToast, downloadLogToast } = useCustomToast();
 
   const generateWhatsAppMessage = useCallback(() => {
     const { topic, join_url } = meetingDetails;
@@ -140,6 +140,7 @@ export const MeetingProvider = ({ children }) => {
         generateWhatsAppMessage,
         errorToast,
         successToast,
+        downloadLogToast,
         formatBytes,
         apiBaseUrl,
         areUsersAvailable,

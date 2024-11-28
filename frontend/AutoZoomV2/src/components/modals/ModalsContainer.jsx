@@ -9,6 +9,7 @@ const ModalsContainer = () => {
     usersMap,
     errorToast,
     successToast,
+    downloadLogToast,
     formatBytes,
     apiBaseUrl,
   } = useMeetingContext() || {};
@@ -30,6 +31,7 @@ const ModalsContainer = () => {
         usersMap={usersMap}
         displayErrorToast={errorToast}
         displaySuccessToast={successToast}
+        displayDownloadLogToast={downloadLogToast}
         formatBytes={formatBytes}
         apiBaseUrl={apiBaseUrl}
       />

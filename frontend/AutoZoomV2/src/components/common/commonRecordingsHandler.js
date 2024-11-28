@@ -165,34 +165,59 @@ const CommonRecordingsHandler = {
     }
   },
   // CHANGE - New way to donwload all recordings to the server with validation of videos less then 5mb and less than 5min
-  async downloadAllRecordingsFromServer(recordings, displaySuccessToast, displayErrorToast, apiBaseUrl) {
+  async downloadAllRecordingsFromServer(recordings, displaySuccessToast, displayErrorToast, displayDownloadLogToast, apiBaseUrl) {
     try {
-      console.log(recordings);
+      console.log("Initiating downloads:", recordings);
 
       const ws = new WebSocket('ws://localhost:8080');
+      let totalFiles = 0;
+      let completedFiles = 0;
+
+      recordings.forEach((group) => {
+        totalFiles += group.recordings.length;
+      });
       ws.onopen = () => {
         console.log("WebSocket connection established for download progress tracking.");
+        displayDownloadLogToast("Downloads Process", "Preparing downloads...", 0, 0);
       };
 
       ws.onmessage = (event) => {
         const progressUpdate = JSON.parse(event.data);
         console.log("Progress Update:", progressUpdate);
+        if (progressUpdate.status === "Completed") {
+          completedFiles += 1;
+        }
+        const currentFileProgress = parseFloat(progressUpdate.percentage) || 0; // Ensure percentage is a number
+        const overallPercentage = (completedFiles / totalFiles) * 100;
 
         // Display progress or status in a toast or a progress bar
-        displaySuccessToast(
-          `Downloading ${progressUpdate.topic}`,
-          `Progress: ${progressUpdate.percentage}% - Status: ${progressUpdate.status}`,
-          progressUpdate.status === "✅" ? "success" : "info"
+        displayDownloadLogToast(
+          "Downloads Process",
+          `Downloading: ${progressUpdate.topic || "N/A"} - ${progressUpdate.percentage || 0}%`,
+          currentFileProgress,
+          overallPercentage, // Overall progress
+          overallPercentage === 100 // Mark as complete
         );
       };
 
       ws.onclose = () => {
         console.log("WebSocket connection closed.");
+        if (completedFiles < totalFiles) {
+          displayErrorToast(
+            "Download Incomplete",
+            "The WebSocket connection closed before completing all downloads."
+          );
+        }
       };
-      
+
+      ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+        displayErrorToast("WebSocket Error", "An error occurred during WebSocket communication.");
+      };
+
       // API request to the server to trigger downloads
       const response = await axios.post(`http://localhost:8080/api/downloads/download-all-recordings`, { recordings });
-      console.log(response.data);
+      console.log("Server response:", response.data);
       if (response.status === 200) {
         displaySuccessToast(
           "Downloading started.",
